@@ -16,7 +16,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Second"></activity>
+        <activity android:name=".Second" />
+        <activity android:name=".RegistrationActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".AddPasswordActivity" />
+        <activity
+            android:name=".TryActivity"
+            android:label="@string/title_activity_try"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

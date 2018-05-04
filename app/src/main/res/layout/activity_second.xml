@@ -43,8 +43,31 @@
             android:layout_alignParentTop="true"
             android:layout_marginTop="56dp">
 
+
+
         </fragment>
 
+        <android.support.design.widget.CoordinatorLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                app:elevation="6dp"
+                app:backgroundTint="#0f0c29"
+                app:pressedTranslationZ="12dp"
+                android:onClick="addPassword"
+                android:layout_margin="@dimen/fab_margin"
+                android:src="@drawable/ic_add_white_24dp" />
+
+        </android.support.design.widget.CoordinatorLayout>
     </RelativeLayout>
 
 

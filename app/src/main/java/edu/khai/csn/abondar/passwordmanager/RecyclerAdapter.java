@@ -9,9 +9,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import edu.khai.csn.abondar.passwordmanager.Model.Entities.Password;
+
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>{
-    ArrayList<Service>  arrayList = new ArrayList<>();
-    public RecyclerAdapter(ArrayList<Service> arrayList){
+    ArrayList<Password>  arrayList = new ArrayList<>();
+    public RecyclerAdapter(ArrayList<Password> arrayList){
         this.arrayList = arrayList;
     }
 
@@ -24,9 +26,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.icon.setImageResource(arrayList.get(position).getIconId());
+        //holder.icon.setImageResource(arrayList.get(position).getIconId());
         holder.serviceName.setText(arrayList.get(position).getServiceName());
-        holder.loginName.setText(arrayList.get(position).getLoginName());
+        holder.loginName.setText(arrayList.get(position).getUserName());
     }
 
     @Override
@@ -35,19 +37,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
-        ImageView icon;
+        //ImageView icon;
         TextView serviceName;
         TextView loginName;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            icon = itemView.findViewById(R.id.imgAccount);
+            //icon = itemView.findViewById(R.id.imgAccount);
             serviceName = itemView.findViewById(R.id.serviceName);
             loginName = itemView.findViewById(R.id.login);
         }
     }
 
-    public void setFilter(ArrayList<Service> newList){
+    public void setFilter(ArrayList<Password> newList){
         arrayList = new ArrayList<>();
         arrayList.addAll(newList);
         notifyDataSetChanged();
