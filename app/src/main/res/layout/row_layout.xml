@@ -1,63 +1,58 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--android:id="@+id/watchPasswordDetails"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_marginBottom="3dp"--><!--android:layout_marginLeft="4dp"--><!--android:layout_marginRight="4dp"--><!--android:descendantFocusability="blocksDescendants"--><!--android:layout_marginTop="3dp"--><!--android:orientation="vertical">-->
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
-    android:layout_marginLeft="4dp"
-    android:layout_marginRight="4dp"
-    >
-    <android.support.v7.widget.CardView
+    android:layout_height="75dp"
+    android:layout_margin="5dp"
+    android:background="#f1f1f1"
+    android:clickable="true"
+    android:focusable="false"
+    android:elevation="2dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardCornerRadius="8dp">
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:elevation="2dp"
-        app:cardCornerRadius="8dp"
+        android:layout_height="match_parent"
         android:background="#f1f1f1"
-        >
-        
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="8dp"
-            android:background="#f1f1f1"
-            >
-            
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="75dp"
-                android:src="@drawable/ic_icon_twitter"
-                android:layout_marginLeft="8dp"
-                android:scaleType="fitXY"
-                android:id="@+id/imgAccount"/>
+        android:padding="8dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/login"
-                android:layout_marginLeft="15dp"
-                android:layout_marginStart="15dp"
-                android:layout_toEndOf="@+id/imgAccount"
-                android:layout_toRightOf="@+id/imgAccount"
-                android:gravity="left"
-                android:text="Twitter"
-                android:textColor="#000000"
-                android:textSize="24dp"
-                android:id="@+id/serviceName"/>
+        <ImageView
+            android:id="@+id/imgAccount"
+            android:layout_width="60dp"
+            android:layout_height="75dp"
+            android:layout_marginLeft="8dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_account_circle_black_48dp" />
 
-            <TextView
-                android:id="@+id/login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/serviceName"
-                android:layout_alignParentBottom="true"
-                android:layout_alignStart="@+id/serviceName"
-                android:gravity="left"
-                android:text="@ascererak"
-                android:textColor="#000000"
-                android:textSize="17dp" />
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
+        <TextView
+            android:id="@+id/serviceName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/login"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_toEndOf="@+id/imgAccount"
+            android:layout_toRightOf="@+id/imgAccount"
+            android:gravity="left"
+            android:text=""
+            android:textColor="#000000"
+            android:textSize="24dp" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/serviceName"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/serviceName"
+            android:gravity="left"
+            android:text=""
+            android:textColor="#000000"
+            android:textSize="17dp" />
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
+
+    <!--</LinearLayout>-->

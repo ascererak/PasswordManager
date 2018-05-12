@@ -1,5 +1,6 @@
 package edu.khai.csn.abondar.passwordmanager;
 
+import android.animation.ValueAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
@@ -10,21 +11,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.DBHelper;
-import edu.khai.csn.abondar.passwordmanager.Model.Entities.Password;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.User;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
-    protected Button btn;
+    protected Button btnLogin;
     protected EditText username;
     protected EditText password;
     protected TextView forgotPass;
     protected ArrayList<User> users = new ArrayList<>();
     protected DBHelper db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +31,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         db = new DBHelper(this);
-        btn = findViewById(R.id.btnLogin);
-        btn.setOnClickListener(this);
+        btnLogin = findViewById(R.id.btnLogin);
+        btnLogin.setOnClickListener(this);
         username = findViewById(R.id.etUsername);
         password = findViewById(R.id.etPassword);
         forgotPass = findViewById(R.id.tvForgotPass);
@@ -53,7 +52,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //}
 
         if (db.getUser(_username, _password)) {//|| found || (_username.equals("admin") && _password.equals("admin"))) {
-            Intent intent = new Intent(this, Second.class);
+            Intent intent = new Intent(this, HomeActivity.class);
             Bundle extras = new Bundle();
             extras.putSerializable("user", db.getUser(_username));
             intent.putExtras(extras);
@@ -100,7 +99,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //        Bundle bundle = data.getExtras();
 //        users = (ArrayList<User>) bundle.getSerializable("users1");
 //    }
-
     public ArrayList<User> getUsers(){
         return users;
     }

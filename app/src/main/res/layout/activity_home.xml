@@ -3,11 +3,13 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/drawerLayout"
+    android:clickable="false"
+    android:focusable="false"
     android:orientation="vertical"
-    tools:context="edu.khai.csn.abondar.passwordmanager.Second">
+    tools:context="edu.khai.csn.abondar.passwordmanager.HomeActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,38 +19,45 @@
         <include
             layout="@layout/navigation_action"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
         </include>
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/recyclerview">
+            android:scrollbars="vertical" />
 
-        </android.support.v7.widget.RecyclerView>
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/layoutContent">
 
-        <fragment
+        <FrameLayout
             android:id="@+id/fragment"
-            android:name="edu.khai.csn.abondar.passwordmanager.DefaultFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="56dp">
+            android:layout_marginTop="56dp"/>
+        <!--<fragment-->
+        <!--android:id="@+id/fragment"-->
+        <!--android:name="edu.khai.csn.abondar.passwordmanager.DefaultFragment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginTop="56dp">-->
 
 
+        <!--</fragment>-->
 
-        </fragment>
-
-        <android.support.design.widget.CoordinatorLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
+        <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
@@ -60,25 +69,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
-                app:elevation="6dp"
-                app:backgroundTint="#0f0c29"
-                app:pressedTranslationZ="12dp"
-                android:onClick="addPassword"
                 android:layout_margin="@dimen/fab_margin"
-                android:src="@drawable/ic_add_white_24dp" />
+                android:focusable="false"
+                android:onClick="addPassword"
+                android:src="@drawable/ic_add_white_24dp"
+                app:backgroundTint="#0f0c29"
+                app:elevation="6dp"
+                app:pressedTranslationZ="12dp" />
 
         </android.support.design.widget.CoordinatorLayout>
     </RelativeLayout>
 
 
-
     <android.support.design.widget.NavigationView
+        android:id="@+id/navigation_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/navigation_view"
-        app:menu="@menu/navigation_menu"
         android:layout_gravity="start"
-        app:headerLayout="@layout/naviation_header">
+        android:focusable="false"
+        app:headerLayout="@layout/naviation_header"
+        app:menu="@menu/navigation_menu">
 
 
     </android.support.design.widget.NavigationView>

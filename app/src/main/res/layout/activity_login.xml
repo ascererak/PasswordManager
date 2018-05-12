@@ -82,6 +82,7 @@
                 android:textColor="#ffffff"
                 android:textAllCaps="false"
                 android:textSize="18dp"
+                android:foreground="?selectableItemBackground"
                 android:padding="18dp"
                 android:clickable="true"
                 style="@style/Base.TextAppearance.AppCompat.Body1"
