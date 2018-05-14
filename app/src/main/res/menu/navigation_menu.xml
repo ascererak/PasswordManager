@@ -20,5 +20,5 @@
 
     <item android:id="@+id/nav_logout"
         android:icon="@mipmap/ic_exit_to_app_black_24dp"
-        android:title="Log out"/>k
+        android:title="Log out"/>
 </menu>

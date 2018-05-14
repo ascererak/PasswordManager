@@ -1,121 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="18dp"
-    android:paddingRight="18dp"
-    android:background="@drawable/gradient_background">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ScrollView
+    <data>
+
+        <variable
+            name="event"
+            type="edu.khai.csn.abondar.passwordmanager.LoginActivity" />
+    </data>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:shadowColor="@color/textShadow"
-                android:shadowDx="1"
-                android:shadowDy="1"
-                android:shadowRadius="2"
-                android:padding="16dp"
-                android:layout_marginTop="98dp"
-                android:layout_marginBottom="20dp"
-                android:fontFamily="@font/futura_bold_font"
-                android:text="Password Manager"
-                android:textColor="@android:color/white"
-                android:textSize="42dp" />
+            android:background="@drawable/gradient_background"
+            android:orientation="vertical"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp">
 
-            <EditText
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/etUsername"
-                android:hint="Username"
-                android:inputType="textPersonName"
-                android:ems="10"
-                android:background="@android:color/transparent"
-                android:drawablePadding="12dp"
-                android:padding="8dp"
-                android:textColor="#fff"
-                android:textColorHint="#fff"
-                android:maxLines="1"
-                android:drawableLeft="@mipmap/ic_person_white_24dp"
-                android:layout_marginTop="70dp" />
+                android:layout_height="match_parent">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#f9d7db"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/etPassword"
-                android:hint="Password"
-                android:inputType="textPassword"
-                android:ems="10"
-                android:background="@android:color/transparent"
-                android:drawablePadding="12dp"
-                android:padding="8dp"
-                android:textColor="#fff"
-                android:textColorHint="#fff"
-                android:maxLines="1"
-                android:drawableLeft="@mipmap/ic_lock_white_24dp"
-                android:layout_marginTop="4dp" />
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginTop="98dp"
+                        android:fontFamily="@font/futura_bold_font"
+                        android:padding="16dp"
+                        android:shadowColor="@color/textShadow"
+                        android:shadowDx="1"
+                        android:shadowDy="1"
+                        android:shadowRadius="2"
+                        android:text="Password Manager"
+                        android:textColor="@android:color/white"
+                        android:textSize="42dp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#f9d7db"/>
+                    <EditText
+                        android:id="@+id/etUsername"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="70dp"
+                        android:background="@android:color/transparent"
+                        android:drawableLeft="@mipmap/ic_person_white_24dp"
+                        android:drawablePadding="12dp"
+                        android:ems="10"
+                        android:hint="Username"
+                        android:inputType="textPersonName"
+                        android:maxLines="1"
+                        android:padding="8dp"
+                        android:textColor="#fff"
+                        android:textColorHint="#fff" />
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_login"
-                android:id="@+id/btnLogin"
-                android:text="Log in"
-                android:textColor="#ffffff"
-                android:textAllCaps="false"
-                android:textSize="18dp"
-                android:foreground="?selectableItemBackground"
-                android:padding="18dp"
-                android:clickable="true"
-                style="@style/Base.TextAppearance.AppCompat.Body1"
-                android:layout_marginTop="30dp"
-                />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#f9d7db" />
 
-            <Button
-                android:id="@+id/btnSignUpLS"
-                style="@style/Base.TextAppearance.AppCompat.Body1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:background="@drawable/background_signup"
-                android:clickable="true"
-                android:onClick="btnSignupLS_click"
-                android:padding="18dp"
-                android:text="Sign up"
-                android:textAllCaps="false"
-                android:textColor="@color/colorAccent"
-                android:textSize="18dp" />
+                    <EditText
+                        android:id="@+id/etPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:background="@android:color/transparent"
+                        android:drawableLeft="@mipmap/ic_lock_white_24dp"
+                        android:drawablePadding="12dp"
+                        android:ems="10"
+                        android:hint="Password"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:padding="8dp"
+                        android:textColor="#fff"
+                        android:textColorHint="#fff" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvForgotPass"
-                android:onClick="forgotPassClick"
-                android:clickable="true"
-                android:text="Forgot your password?"
-                android:textColor="#ffffff"
-                style="@style/Base.TextAppearance.AppCompat.Body2"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp"
-                />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#f9d7db" />
+
+                    <FrameLayout
+                        android:id="@+id/btnLogin"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="30dp"
+                        android:background="@drawable/background_login"
+                        android:clickable="true"
+                        android:elevation="4dp"
+                        android:foreground="?selectableItemBackground">
+
+                        <TextView
+                            android:id="@+id/textViewOnButtonLogin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Log in"
+                            android:textColor="@android:color/white"
+                            android:textSize="18dp" />
+
+                        <ProgressBar
+                            android:id="@+id/progressBar"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_gravity="center"
+                            android:visibility="invisible" />
+                    </FrameLayout>
+                    <!--<Button-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:background="@drawable/background_login"-->
+                    <!--android:id="@+id/btnLogin"-->
+                    <!--android:text="Log in"-->
+                    <!--android:textColor="#ffffff"-->
+                    <!--android:textAllCaps="false"-->
+                    <!--android:textSize="18dp"-->
+                    <!--android:foreground="?selectableItemBackground"-->
+                    <!--android:padding="18dp"-->
+                    <!--android:clickable="true"-->
+                    <!--style="@style/Base.TextAppearance.AppCompat.Body1"-->
+                    <!--android:layout_marginTop="30dp"-->
+                    <!--/>-->
+                    <FrameLayout
+                        android:id="@+id/btnSignUpLS"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="30dp"
+                        android:background="@drawable/background_signup"
+                        android:onClick="btnSignupLS_click"
+                        android:clickable="true"
+                        android:elevation="4dp"
+                        android:foreground="?selectableItemBackground">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Sign up"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="18dp" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/tvForgotPass"
+                        style="@style/Base.TextAppearance.AppCompat.Body2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:clickable="true"
+                        android:onClick="forgotPassClick"
+                        android:padding="16dp"
+                        android:text="Forgot your password?"
+                        android:textColor="#ffffff" />
+                </LinearLayout>
+            </ScrollView>
         </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+
+        <View
+            android:id="@+id/reveal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorAccent"
+            android:visibility="invisible" />
+    </RelativeLayout>
+</layout>

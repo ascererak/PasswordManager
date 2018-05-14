@@ -1,10 +1,14 @@
 package edu.khai.csn.abondar.passwordmanager;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -23,6 +27,7 @@ import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
@@ -31,10 +36,12 @@ import android.widget.Toast;
 import android.widget.ViewAnimator;
 
 import java.util.ArrayList;
+import android.os.Handler;
 
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.DBHelper;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.Password;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.User;
+import edu.khai.csn.abondar.passwordmanager.databinding.ActivityHomeBinding;
 
 public class HomeActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
         NavigationView.OnNavigationItemSelectedListener {
@@ -51,19 +58,24 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
     private User user;
     private TextView lblUsername;
     private String mServiceName;
-    //private String[] c_services = {"Twitter", "Google", "Instagram"};
-    //private String[] accountLogins = {"@ascererak", "a.bondar@student.csn.khai.edu", "@ascererak"};
-    //private int[] accountImages = {R.drawable.ic_icon_twitter, R.drawable.ic_icon_google, R.drawable.ic_icon_instagram};
     private RecyclerView mRecyclerView;
     private RecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     //private ArrayList<Password> arrayList = new ArrayList<>();
     private RelativeLayout layoutContent;
+    private ActivityHomeBinding mBinding;
+    protected View reveal;
+    private TextView usernameOnNavHeader;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        //setContentView(R.layout.activity_home);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
+        //LoginActivity loginActivity = (LoginActivity) getParent();
+        //loginActivity.reset();
 
         getCurrentUser();
       //  lblUsername.setText(user.getUsername());
@@ -75,8 +87,11 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
         rotate_backward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_backward);
         rotate_forward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_forward);
         layoutContent = findViewById(R.id.layoutContent);
+        usernameOnNavHeader = findViewById(R.id.username_on_nav_header);
+        //usernameOnNavHeader.setText(user.getUsername());
 
         mDrawerLayout = findViewById(R.id.drawerLayout);
+        reveal = findViewById(R.id.reveal);
 
         Toggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
         mDrawerLayout.addDrawerListener(Toggle);
@@ -96,8 +111,8 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
             @Override
             public void onItemClick (int position) {
 
-                mServiceName = mPasswordList.get(position).getServiceName();
-                callWatchPasswordDetailsActivity();
+                //mServiceName = mPasswordList.get(position).getServiceName();
+                //callWatchPasswordDetailsActivity();
             }
         }
 );
@@ -113,7 +128,7 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
 
 
 
-        NavigationView navigationView = findViewById(R.id.navigation_view);
+        NavigationView navigationView = mBinding.navigationView;//findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -134,7 +149,7 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
         Bundle extras = getIntent().getExtras();
         if(extras!=null)
             user = (User) extras.getSerializable("user");
-        lblUsername = findViewById(R.id.lblUsername5);
+       // lblUsername = findViewById(R.id.lblUsername5);
     }
 
     private void callWatchPasswordDetailsActivity() {
@@ -198,6 +213,14 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
         moveTaskToBack(true);
     }
 
+    //@Override
+    //public void onPause() {
+    //    super.onPause();
+    //    LoginActivity login = (LoginActivity) getParent();
+    //    login.mBinding.reveal.setVisibility(View.INVISIBLE);
+    //    finish();
+    //}
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -219,31 +242,95 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
             //    fragment = new SettingsFragment();
                 break;
             case R.id.nav_logout:
+                LoginActivity login = (LoginActivity) getParent();
+                login.mBinding.reveal.setVisibility(View.INVISIBLE);
                 finish();
                 return false;
         }
-
-
         mDrawerLayout.closeDrawers();
         return false;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void addPassword(View v){
         Fragment fragment;
 
         if(!isFabOpen) {
             animateFab();
+            mBinding.fab.setElevation(0f);
+            mBinding.reveal.setVisibility(View.VISIBLE);
+
+            int cx = mBinding.reveal.getWidth();
+            int cy = mBinding.reveal.getHeight();
+
+            int x = (int) (mBinding.fab.getMeasuredHeight()/2 + mBinding.fab.getX());
+            int y = (int) (mBinding.fab.getMeasuredHeight()/2 + mBinding.fab.getY());
+
+            float finalRadius = Math.max(cx, cy) * 1.2f;
+
+            Animator reveal = ViewAnimationUtils.createCircularReveal(mBinding.reveal, x, y, 56, finalRadius);
+            reveal.setDuration(350);
+            reveal.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    //finish();
+                    //  reset();
+                }});
+
+            reveal.start();
+
             fragment = new AddPasswordFragment();
+            FragmentManager manager = getSupportFragmentManager();
+            final FragmentTransaction transaction = manager.beginTransaction();
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.fragment, fragment);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    transaction.commit();
+                    mBinding.reveal.setVisibility(View.INVISIBLE);
+                }
+            }, 300);
         }
+
         else{
             animateFab();
+            mBinding.reveal.setVisibility(View.VISIBLE);
+            int x = mBinding.layoutContent.getRight();
+            int y = mBinding.layoutContent.getBottom();
+
+            int startRadius = Math.max(mBinding.layoutContent.getWidth(), mBinding.layoutContent.getHeight());
+            int endRadius = 0;
+
+            Animator anim = ViewAnimationUtils.createCircularReveal(mBinding.reveal, x, y, startRadius, endRadius);
+            anim.setDuration(350);
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                }
+            });
+            anim.start();
             fragment = new DefaultFragment();
+            FragmentManager manager = getSupportFragmentManager();
+            final FragmentTransaction transaction = manager.beginTransaction();
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.fragment, fragment);
+            transaction.commit();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    //transaction.commit();
+                    mBinding.reveal.setVisibility(View.INVISIBLE);
+                }
+            }, 300);
         }
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.addToBackStack(null);
-        transaction.replace(R.id.fragment, fragment);
-        transaction.commit();
+
+
+
+
 
 
 
@@ -287,4 +374,5 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
        // transaction.replace(R.id.fragment, fragment);
        // transaction.commit();
     }
+    //private Animation getSlideDow
 }

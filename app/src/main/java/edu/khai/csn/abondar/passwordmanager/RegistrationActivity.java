@@ -2,6 +2,8 @@ package edu.khai.csn.abondar.passwordmanager;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -19,12 +22,12 @@ import edu.khai.csn.abondar.passwordmanager.Model.Entities.Password;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.User;
 
 public class RegistrationActivity extends AppCompatActivity {
-    private EditText etName;
-    private EditText etEmail;
-    private EditText etPassword;
-    private EditText etConfirmPassword;
-    private EditText etUsername;
-    private Button btnSignup;
+    private EditText mEtName;
+    private EditText mEtEmail;
+    private EditText mEtPassword;
+    private EditText mEtConfirmPassword;
+    private EditText mEtUsername;
+    private FrameLayout btnSignup;
 
     private String name;
     private String username;
@@ -32,7 +35,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private String password;
     private String confirmPassword;
 
-    private ArrayList<User> users;
+    //private ArrayList<User> users;
 
     private DBHelper db;
 
@@ -51,11 +54,11 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private void getControls(){
         db = new DBHelper(this);
-        etName = findViewById(R.id.name);
-        etUsername = findViewById(R.id.username);
-        etEmail = findViewById(R.id.email);
-        etPassword = findViewById(R.id.password);
-        etConfirmPassword = findViewById(R.id.confirmPassword);
+        mEtName = findViewById(R.id.name);
+        mEtUsername = findViewById(R.id.username);
+        mEtEmail = findViewById(R.id.email);
+        mEtPassword = findViewById(R.id.password);
+        mEtConfirmPassword = findViewById(R.id.confirmPassword);
         btnSignup = findViewById(R.id.btnSignUpRS);
     }
 
@@ -72,32 +75,32 @@ public class RegistrationActivity extends AppCompatActivity {
     private boolean validate(){
         boolean valid = true;
         if(name.isEmpty()|| name.length() > 32){
-            etName.setError("Please enter valid name");
+            mEtName.setError("Please enter valid name");
             valid = false;
         }
 
         if(username.isEmpty()|| username.length() > 32){
-            etUsername.setError("Please enter valid username");
+            mEtUsername.setError("Please enter valid username");
             valid = false;
         }
 
         if(email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            etEmail.setError("Please enter valid email");
+            mEtEmail.setError("Please enter valid email");
             valid = false;
         }
 
         if(password.isEmpty()){
-            etPassword.setError("Please enter Password");
+            mEtPassword.setError("Please enter Password");
             valid = false;
         }
 
         if(confirmPassword.isEmpty()){
-            etConfirmPassword.setError("Please confirm your password");
+            mEtConfirmPassword.setError("Please confirm your password");
             valid = false;
         }
 
         if(!password.equals(confirmPassword)){
-            etConfirmPassword.setError("Passwords does not match");
+            mEtConfirmPassword.setError("Passwords does not match");
             valid = false;
         }
 
@@ -105,7 +108,13 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void onSignupSuccess(){
-        User newUser = new User(0, username,name, email, password, new ArrayList<Password>());
+        Cryptography crypto = new Cryptography("passwordmanager1");
+
+        try {
+            password = crypto.encrypt(password);
+        }catch (Exception e){}
+
+        User newUser = new User(0, username, name, email, password, new ArrayList<Password>());
         if(db.getUser(username, email, 1)){
             Toast.makeText(this, "User with such username or email has all ready been registered", Toast.LENGTH_SHORT).show();
         }
@@ -123,10 +132,10 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void inizialize(){
-        name = etName.getText().toString().trim();
-        username = etUsername.getText().toString().trim();
-        email = etEmail.getText().toString().trim();
-        password = etPassword.getText().toString().trim();
-        confirmPassword = etConfirmPassword.getText().toString().trim();
+        name = mEtName.getText().toString().trim();
+        username = mEtUsername.getText().toString().trim();
+        email = mEtEmail.getText().toString().trim();
+        password = mEtPassword.getText().toString().trim();
+        confirmPassword = mEtConfirmPassword.getText().toString().trim();
     }
 }
