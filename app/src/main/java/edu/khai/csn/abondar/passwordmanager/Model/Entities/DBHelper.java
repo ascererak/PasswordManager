@@ -19,25 +19,25 @@ import java.util.Date;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final String TAG = DBHelper.class.getSimpleName();
-    public static final String DB_NAME = "users.db";
-    public static final int DB_VERSION = 1;
+    private static final String TAG = DBHelper.class.getSimpleName();
+    private static final String DB_NAME = "users.db";
+    private static final int DB_VERSION = 1;
 
-    public static final String USER_TABLE = "users";
-    public static final String COLUMN_ID = "id";
-    public static final String COLUMN_NAME = "name";
-    public static final String COLUMN_USERNAME = "username";
-    public static final String COLUMN_EMAIL = "email";
-    public static final String COLUMN_PASS = "masterPassword";
+    private static final String USER_TABLE = "users";
+    private static final String COLUMN_ID = "id";
+    private static final String COLUMN_NAME = "name";
+    private static final String COLUMN_USERNAME = "username";
+    private static final String COLUMN_EMAIL = "email";
+    private static final String COLUMN_PASS = "masterPassword";
     //public static final String COLUMN_PASSWORDS = "passwords";
 
-    public static final String PASSWORD_TABLE = "passwords";
-    public static final String COLUMN_PASSWORD = "password";
-    public static final String COLUMN_SERVICENAME = "serviceName";
-    public static final String COLUMN_ADDINFO = "additionalInformation";
-    public static final String COLUMN_CREATION_DATE = "creationDate";
-    public static final String COLUMN_MODIFYNG_DATE = "modifingDate";
-    public static final String COLUMN_KEY = "key";
+    private static final String PASSWORD_TABLE = "passwords";
+    private static final String COLUMN_PASSWORD = "password";
+    private static final String COLUMN_SERVICENAME = "serviceName";
+    private static final String COLUMN_ADDINFO = "additionalInformation";
+    private static final String COLUMN_CREATION_DATE = "creationDate";
+    private static final String COLUMN_MODIFYNG_DATE = "modifingDate";
+    private static final String COLUMN_KEY = "key";
 
     /**
      * create table users(
@@ -47,14 +47,14 @@ public class DBHelper extends SQLiteOpenHelper {
      * email text,
      * password text)
      */
-    public static final String CREATE_TABLE_USERS = "CREATE TABLE " + USER_TABLE + "("
+    private static final String CREATE_TABLE_USERS = "CREATE TABLE " + USER_TABLE + "("
             + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + COLUMN_NAME + " TEXT,"
             + COLUMN_USERNAME  + " TEXT,"
             + COLUMN_EMAIL + " TEXT,"
             + COLUMN_PASS + " TEXT);";
 
-    public static final String CREATE_TABLE_PASSWORDS = "CREATE TABLE " + PASSWORD_TABLE + "("
+    private static final String CREATE_TABLE_PASSWORDS = "CREATE TABLE " + PASSWORD_TABLE + "("
             + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + COLUMN_PASSWORD + " TEXT,"
             + COLUMN_USERNAME  + " TEXT,"
@@ -237,7 +237,9 @@ public class DBHelper extends SQLiteOpenHelper {
                         format.parse(cursor.getString(5)), format.parse(cursor.getString(6))));
             }
         }
-        catch (Exception e){}
+        catch (Exception e){
+            Log.e("Exeption", "Something went wrong while getting passwords");
+        }
 
         cursor.close();
         db.close();

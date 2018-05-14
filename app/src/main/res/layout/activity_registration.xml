@@ -117,7 +117,7 @@
                 android:clickable="true"
                 android:elevation="4dp"
                 android:foreground="?selectableItemBackground"
-                android:onClick="btnSignup_click">
+                android:onClick="btnSignupClick">
 
                 <TextView
                     android:layout_width="wrap_content"

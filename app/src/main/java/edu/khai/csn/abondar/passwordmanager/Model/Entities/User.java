@@ -22,16 +22,8 @@ public class User implements Serializable{
         this.passwords = passwords;
     }
 
-    public ArrayList<Password> getPasswords() {
-        return passwords;
-    }
-
     public void setPasswords(ArrayList<Password> passwords) {
         this.passwords = passwords;
-    }
-
-    public int getUserID() {
-        return userID;
     }
 
     public void setUserID(int userID) {

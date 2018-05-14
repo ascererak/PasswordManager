@@ -14,6 +14,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
@@ -42,20 +43,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected ProgressBar progressBar;
     protected View reveal;
     protected Intent intent;
+    protected String mPassword;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_login);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
+        findViews();
+
+        db = new DBHelper(this);
+
+        btnLogin.setOnClickListener(this);
+    }
+
+    private void findViews(){
         textViewOnButtonLogIn = findViewById(R.id.textViewOnButtonLogin);
         progressBar = findViewById(R.id.progressBar);
         reveal = findViewById(R.id.reveal);
-
-        db = new DBHelper(this);
         btnLogin = findViewById(R.id.btnLogin);
-        btnLogin.setOnClickListener(this);
         username = findViewById(R.id.etUsername);
         password = findViewById(R.id.etPassword);
         forgotPass = findViewById(R.id.tvForgotPass);
@@ -64,19 +70,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         String _username = username.getText().toString();
-        String _password = password.getText().toString();
+        mPassword = password.getText().toString();
 
-        Cryptography crypto = new Cryptography("passwordmanager1");
-        try {
-            _password = crypto.encrypt(_password);
-        }catch (Exception e){}
+        encrypt();
 
-        if (db.getUser(_username, _password)) {//|| found || (_username.equals("admin") && _password.equals("admin"))) {
-            intent = new Intent(this, HomeActivity.class);
-            Bundle extras = new Bundle();
-            extras.putSerializable("user", db.getUser(_username));
-            intent.putExtras(extras);
-            load();
+        if (db.getUser(_username, mPassword)) {
+            prepareToLaunchActivity(_username);
         }
         else{
             Toast.makeText(this, "There is no such user or password is incorrect", Toast.LENGTH_SHORT).show();
@@ -84,11 +83,28 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private void startHomeActivity(){
-
+    private void prepareToLaunchActivity(String _username) {
+        intent = new Intent(this, HomeActivity.class);
+        Bundle extras = new Bundle();
+        extras.putSerializable("user", db.getUser(_username));
+        intent.putExtras(extras);
+        load();
     }
 
-    private void load(){
+    public void encrypt(){
+
+        String key = "passwordmanager1";
+        Cryptography crypto = new Cryptography(key, this);
+
+        try {
+            mPassword = crypto.encrypt(mPassword);
+        }
+        catch (Exception e) {
+            Log.e("Exception", "Something went wrong while encrypting password");
+        }
+    }
+
+    private void load() {
         animateButtonWidth();
 
         fadeOutTextAndShowProgressDialog();
@@ -96,7 +112,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         nextAction();
     }
 
-    private void animateButtonWidth(){
+    private void animateButtonWidth() {
         ValueAnimator anim = ValueAnimator.ofInt(mBinding.btnLogin.getMeasuredWidth(), mBinding.btnLogin.getMeasuredHeight());
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -111,7 +127,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         anim.start();
     }
 
-    private void fadeOutTextAndShowProgressDialog(){
+    private void fadeOutTextAndShowProgressDialog() {
         mBinding.textViewOnButtonLogin.animate().alpha(0f)
                 .setDuration(250)
                 .setListener(new AnimatorListenerAdapter() {
@@ -123,7 +139,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }).start();
     }
 
-    private void showProgressDialog(){
+    private void showProgressDialog() {
         mBinding.progressBar
                 .getIndeterminateDrawable()
                 .setColorFilter(Color.parseColor("#ffffff"), PorterDuff.Mode.SRC_IN);
@@ -145,16 +161,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         dlgAlert.create().show();
     }
 
-    public void btnSignupLS_click(View view){
+    public void btnSignupLSClick(View view) {
         Intent intent = new Intent(this, RegistrationActivity.class);
-        //   Bundle extras = new Bundle();
-        // extras.putSerializable("users", users);
-        //intent.putExtras(extras);
-        //startActivityForResult(intent, 1);
         startActivity(intent);
     }
 
-    private void nextAction(){
+    private void nextAction() {
         new Handler().postDelayed(new Runnable() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
@@ -168,10 +180,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }, 1000);
     }
 
-
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void revealButton(){
+    private void revealButton() {
         mBinding.btnLogin.setElevation(0f);
 
         mBinding.reveal.setVisibility(View.VISIBLE);
@@ -189,27 +199,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-               //finish();
-               //  reset();
             }
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-            private void reset(){
-                mBinding.textViewOnButtonLogin.setVisibility(View.VISIBLE);
-                mBinding.textViewOnButtonLogin.setAlpha(1f);
-                mBinding.btnLogin.setElevation(4f);
-                ViewGroup.LayoutParams layoutParams = mBinding.btnLogin.getLayoutParams();
-                layoutParams.width =  mBinding.btnSignUpLS.getMeasuredWidth();
-                mBinding.btnLogin.requestLayout();
-            }});
+            //@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            //private void reset(){
+            //    mBinding.textViewOnButtonLogin.setVisibility(View.VISIBLE);
+            //    mBinding.textViewOnButtonLogin.setAlpha(1f);
+            //    mBinding.btnLogin.setElevation(4f);
+            //    ViewGroup.LayoutParams layoutParams = mBinding.btnLogin.getLayoutParams();
+            //    layoutParams.width =  mBinding.btnSignUpLS.getMeasuredWidth();
+            //    mBinding.btnLogin.requestLayout();
+            //
+            });
 
         reveal.start();
     }
 
-    private void fadeOutProgressDialog(){
+    private void fadeOutProgressDialog() {
         mBinding.progressBar.animate().alpha(0f).setDuration(200).start();
     }
 
-    private void delayedStartNextActivity(){
+    private void delayedStartNextActivity() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

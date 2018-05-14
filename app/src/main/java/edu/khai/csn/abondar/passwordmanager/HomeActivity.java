@@ -27,13 +27,9 @@ import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.view.ViewAnimationUtils;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ViewAnimator;
 
 import java.util.ArrayList;
 import android.os.Handler;
@@ -47,25 +43,18 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
         NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle Toggle;
-    private ActionBar actionBar;
-    private android.support.v7.widget.Toolbar mToolBar;
-    private DBHelper db;
+    private ActionBarDrawerToggle mToggle;
+    private DBHelper mDb;
     private ArrayList<Password> mPasswordList;
-    private FloatingActionButton fab;
-    private Animation rotate_backward, rotate_forward;
-    private Boolean isFabOpen = false;
-    private User user;
-    private TextView lblUsername;
-    private String mServiceName;
+    private FloatingActionButton mFab;
+    private Animation mRotateBackward;
+    private Animation mRotateForward;
+    private Boolean mIsFabOpen = false;
+    private User mUser;
     private RecyclerView mRecyclerView;
     private RecyclerAdapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    //private ArrayList<Password> arrayList = new ArrayList<>();
-    private RelativeLayout layoutContent;
     private ActivityHomeBinding mBinding;
-    protected View reveal;
-    private TextView usernameOnNavHeader;
+    protected View mReveal;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -78,29 +67,30 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
         //loginActivity.reset();
 
         getCurrentUser();
-      //  lblUsername.setText(user.getUsername());
-        db = new DBHelper(this);
-        mPasswordList = db.getPassword(user.getUsername());
-        mToolBar = findViewById(R.id.navAction);
+      //  lblUsername.setText(mUser.getUsername());
+        mDb = new DBHelper(this);
+        mPasswordList = mDb.getPassword(mUser.getUsername());
+        android.support.v7.widget.Toolbar mToolBar = findViewById(R.id.navAction);
         setSupportActionBar(mToolBar);
-        fab = findViewById(R.id.fab);
-        rotate_backward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_backward);
-        rotate_forward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_forward);
-        layoutContent = findViewById(R.id.layoutContent);
-        usernameOnNavHeader = findViewById(R.id.username_on_nav_header);
-        //usernameOnNavHeader.setText(user.getUsername());
+        mFab = findViewById(R.id.fab);
+        mRotateBackward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_backward);
+        mRotateForward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_forward);
+        //layoutContent = findViewById(R.id.layoutContent);
+        //usernameOnNavHeader = findViewById(R.id.username_on_nav_header);
+        //usernameOnNavHeader.setText(mUser.getUsername());
 
         mDrawerLayout = findViewById(R.id.drawerLayout);
-        reveal = findViewById(R.id.reveal);
+        mReveal = findViewById(R.id.reveal);
 
-        Toggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
-        mDrawerLayout.addDrawerListener(Toggle);
-        Toggle.syncState();
+        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
+        mDrawerLayout.addDrawerListener(mToggle);
+        mToggle.syncState();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0f0c29")));
+
 
         buildRecyclerView();
 
@@ -135,34 +125,27 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
     public void buildRecyclerView(){
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mAdapter = new RecyclerAdapter(mPasswordList, this);
 
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
     }
 
     /**
-     * Getting a current user
+     * Getting a current mUser
      */
     private void getCurrentUser(){
         Bundle extras = getIntent().getExtras();
         if(extras!=null)
-            user = (User) extras.getSerializable("user");
+            mUser = (User) extras.getSerializable("mUser");
        // lblUsername = findViewById(R.id.lblUsername5);
-    }
-
-    private void callWatchPasswordDetailsActivity() {
-        //Toast.makeText(this, mServiceName, Toast.LENGTH_LONG);
-         Intent intent = new Intent(this, PasswordDetailsActivity.class);
-         intent.putExtra("service", mServiceName);
-         startActivity(intent);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (Toggle.onOptionsItemSelected(item)){
+        if (mToggle.onOptionsItemSelected(item)){
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -170,8 +153,8 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public  void onStart(){
         super.onStart();
-        db = new DBHelper(this);
-        mPasswordList = db.getPassword(user.getUsername());
+        mDb = new DBHelper(this);
+        mPasswordList = mDb.getPassword(mUser.getUsername());
         mAdapter = new RecyclerAdapter(mPasswordList, this);
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -217,7 +200,7 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
     //public void onPause() {
     //    super.onPause();
     //    LoginActivity login = (LoginActivity) getParent();
-    //    login.mBinding.reveal.setVisibility(View.INVISIBLE);
+    //    login.mBinding.mReveal.setVisibility(View.INVISIBLE);
     //    finish();
     //}
 
@@ -255,7 +238,7 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
     public void addPassword(View v){
         Fragment fragment;
 
-        if(!isFabOpen) {
+        if(!mIsFabOpen) {
             animateFab();
             mBinding.fab.setElevation(0f);
             mBinding.reveal.setVisibility(View.VISIBLE);
@@ -337,42 +320,30 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
         ///extras = new Bundle();
         ///extras = fragment.getArguments().getBundle("password");
         ///Password password = (Password) extras.getSerializable("password");
-        ///db.addPassword(user, password);
+        ///mDb.addPassword(mUser, password);
         //animateFab();
         //Intent intent = new Intent(this, AddPasswordActivity.class);
         //Bundle extras = new Bundle();
-        //extras.putSerializable("user", user);
+        //extras.putSerializable("mUser", mUser);
         //intent.putExtras(extras);
         //startActivityForResult(intent, 2);
-        //fab.startAnimation(rotate_backward);
+        //mFab.startAnimation(mRotateBackward);
         //startActivity(intent);
     }
 
     public void animateFab() {
-        if (isFabOpen) {
-            fab.startAnimation(rotate_backward);
-            isFabOpen = false;
+        if (mIsFabOpen) {
+            mFab.startAnimation(mRotateBackward);
+            mIsFabOpen = false;
         }
         else{
-            fab.startAnimation(rotate_forward);
-            isFabOpen = true;
+            mFab.startAnimation(mRotateForward);
+            mIsFabOpen = true;
         }
     }
 
     public User getUser(){
-        return user;
+        return mUser;
     }
 
-    public void watchPasswordDetails(){
-       // TextView tvServiceName = findViewById(R.id.serviceName);
-        String _serviceName = "Very good and very wonderful";//tvServiceName.getText().toString();
-        Toast.makeText(HomeActivity.this, _serviceName, Toast.LENGTH_LONG);
-       // Fragment fragment = new WatchDetailsFragment();
-       // FragmentManager manager = getSupportFragmentManager();
-       // FragmentTransaction transaction = manager.beginTransaction();
-       // transaction.addToBackStack(null);
-       // transaction.replace(R.id.fragment, fragment);
-       // transaction.commit();
-    }
-    //private Animation getSlideDow
 }

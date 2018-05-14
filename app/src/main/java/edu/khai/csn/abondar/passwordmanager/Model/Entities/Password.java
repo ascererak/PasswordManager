@@ -39,24 +39,12 @@ public class Password implements Serializable{
         return serviceName;
     }
 
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
-    }
-
     public String getUserName() {
         return userName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     public String getAdditionalInformation() {
         return additionalInformation;
-    }
-
-    public void setAdditionalInformation(String additionalInformation) {
-        this.additionalInformation = additionalInformation;
     }
 
     public int getId() {
@@ -71,15 +59,7 @@ public class Password implements Serializable{
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
     public Date getModifyingDate() {
         return modifyingDate;
-    }
-
-    public void setModifyingDate(Date modifyingDate) {
-        this.modifyingDate = modifyingDate;
     }
 }

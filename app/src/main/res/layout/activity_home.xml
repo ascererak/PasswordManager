@@ -6,8 +6,6 @@
         android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="false"
-        android:focusable="false"
         android:orientation="vertical"
         tools:context="edu.khai.csn.abondar.passwordmanager.HomeActivity">
 
@@ -71,7 +69,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
                     android:layout_margin="@dimen/fab_margin"
-                    android:focusable="false"
                     android:onClick="addPassword"
                     android:src="@drawable/ic_add_white_24dp"
                     app:backgroundTint="#0f0c29"
@@ -79,6 +76,12 @@
                     app:pressedTranslationZ="12dp" />
 
             </android.support.design.widget.CoordinatorLayout>
+            <View
+            android:id="@+id/reveal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#0f0c29"
+            android:visibility="invisible" />
         </RelativeLayout>
 
 
@@ -87,18 +90,12 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:focusable="false"
             app:headerLayout="@layout/naviation_header"
             app:menu="@menu/navigation_menu">
 
 
         </android.support.design.widget.NavigationView>
-        <View
-            android:id="@+id/reveal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#0f0c29"
-            android:visibility="invisible" />
+
 
     </android.support.v4.widget.DrawerLayout>
 </layout>

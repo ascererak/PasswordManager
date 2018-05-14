@@ -1,7 +1,5 @@
 package edu.khai.csn.abondar.passwordmanager;
 
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -27,38 +25,36 @@ public class PasswordDetailsActivity extends AppCompatActivity {
     private EditText mEtUsername;
     private EditText mEtAddInfo;
     private EditText mEtPassword;
-    private TextView mTvCreationDate;
-    private TextView mTvModifingDate;
-    private Toolbar mToolBar;
     private String mService;
     private String mPassword;
     private String mUsername;
     private String mAddInfo;
     private TextView mSeekBarShower;
     private SeekBar mSeekBar;
-    private DBHelper db;
-    private int generatedPasswordLength = 8;
-    private boolean isEditingAllowed = false;
-    Cryptography crypto;
-    Button mBtnSaveChanges;
+    private DBHelper mDb;
+    private int mGeneratedPasswordLength;
+    private boolean mIsEditingAllowed = false;
+    private Cryptography mCrypto;
+    private Button mBtnSaveChanges;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_details);
 
+        mGeneratedPasswordLength = 8;
         mEtService = findViewById(R.id.ServiceShow);
         mEtUsername = findViewById(R.id.UsernameShow);
         mEtPassword = findViewById(R.id.PasswordShow);
         mBtnSaveChanges = findViewById(R.id.btnSaveChanges);
-        mTvCreationDate = findViewById(R.id.tvCreationDate);
+        TextView mTvCreationDate = findViewById(R.id.tvCreationDate);
         mEtAddInfo = findViewById(R.id.AddInfoShow);
-        mTvModifingDate = findViewById(R.id.tvModifingDate);
-        mToolBar = findViewById(R.id.navAction);
+        TextView mTvModifingDate = findViewById(R.id.tvModifingDate);
+        Toolbar mToolBar = findViewById(R.id.navAction);
         mSeekBarShower = findViewById(R.id.seekBarShowerWD);
         mSeekBar = findViewById(R.id.seekBarWD);
         mSeekBar.setProgress(8);
-        crypto = new Cryptography("passwordmanager1");
+        mCrypto = new Cryptography("passwordmanager1", this);
 
         setSupportActionBar(mToolBar);
         final Password password = (Password) getIntent().getExtras().getSerializable("pass");
@@ -67,7 +63,7 @@ public class PasswordDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 editTextToString();
                 Password _password = new Password(mPassword, mService, mUsername, mAddInfo, password.getId(), password.getCreationDate(), new Date());
-                db.updatePassword(_password);
+                mDb.updatePassword(_password);
                 finish();
             }
         });
@@ -78,10 +74,10 @@ public class PasswordDetailsActivity extends AppCompatActivity {
                 if (progress <= 8) {
                     seekBar.setProgress(8);
                     mSeekBarShower.setText(Integer.toString(8));
-                    generatedPasswordLength = 8;
+                    mGeneratedPasswordLength = 8;
                 } else {
                     mSeekBarShower.setText(Integer.toString(progress));
-                    generatedPasswordLength = progress;
+                    mGeneratedPasswordLength = progress;
                     generatePassword();
                 }
             }
@@ -96,7 +92,7 @@ public class PasswordDetailsActivity extends AppCompatActivity {
 
             }
         });
-        db = new DBHelper(this);
+        mDb = new DBHelper(this);
 
 
         mEtService.setText(password.getServiceName());
@@ -109,7 +105,7 @@ public class PasswordDetailsActivity extends AppCompatActivity {
 
         String decrPassword = "";
         try {
-            decrPassword = crypto.decrypt(password.getPassword());
+            decrPassword = mCrypto.decrypt(password.getPassword());
         } catch (Exception e) {
         }
         mEtPassword.setText(decrPassword);
@@ -120,7 +116,7 @@ public class PasswordDetailsActivity extends AppCompatActivity {
         mService = mEtService.getText().toString().trim();
         mPassword = mEtPassword.getText().toString().trim();
         try {
-            mPassword = crypto.encrypt(mPassword);
+            mPassword = mCrypto.encrypt(mPassword);
         } catch (Exception e) {
         }
         mUsername = mEtUsername.getText().toString().trim();
@@ -146,7 +142,7 @@ public class PasswordDetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (!isEditingAllowed) {
+        if (!mIsEditingAllowed) {
             mService = mEtService.getText().toString().trim();
             mPassword = mEtPassword.getText().toString().trim();
             mUsername = mEtUsername.getText().toString().trim();
@@ -179,7 +175,7 @@ public class PasswordDetailsActivity extends AppCompatActivity {
             mSeekBar.setVisibility(View.INVISIBLE);
         }
 
-        isEditingAllowed = !isEditingAllowed;
+        mIsEditingAllowed = !mIsEditingAllowed;
         return super.onOptionsItemSelected(item);
     }
 
@@ -200,7 +196,7 @@ public class PasswordDetailsActivity extends AppCompatActivity {
     public void generatePassword() {
         GeneratePassword generator = new GeneratePassword();
         try {
-            mEtPassword.setText(generator.generate(generatedPasswordLength));
+            mEtPassword.setText(generator.generate(mGeneratedPasswordLength));
         } catch (Exception e) {
         }
     }

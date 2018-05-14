@@ -1,54 +1,35 @@
 package edu.khai.csn.abondar.passwordmanager;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-import java.util.regex.Pattern;
-
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.DBHelper;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.Password;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.User;
 
 public class RegistrationActivity extends AppCompatActivity {
+
     private EditText mEtName;
     private EditText mEtEmail;
     private EditText mEtPassword;
     private EditText mEtConfirmPassword;
     private EditText mEtUsername;
-    private FrameLayout btnSignup;
-
-    private String name;
-    private String username;
-    private String email;
-    private String password;
-    private String confirmPassword;
-
-    //private ArrayList<User> users;
-
+    private String mName;
+    private String mUsername;
+    private String mEmail;
+    private String mPassword;
+    private String mConfirmPassword;
     private DBHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-
-        //Bundle extras = getIntent().getExtras();
-        //if(extras!=null){
-        //    users = (ArrayList<User>) extras.getSerializable("users");
-        //}
-
         getControls();
     }
 
@@ -59,11 +40,10 @@ public class RegistrationActivity extends AppCompatActivity {
         mEtEmail = findViewById(R.id.email);
         mEtPassword = findViewById(R.id.password);
         mEtConfirmPassword = findViewById(R.id.confirmPassword);
-        btnSignup = findViewById(R.id.btnSignUpRS);
     }
 
-    public void btnSignup_click(View view){
-        inizialize();
+    public void btnSignupClick(View view){
+        initialize();
         if(!validate()){
             Toast.makeText(this, "Sign up has failed", Toast.LENGTH_SHORT).show();
         }
@@ -74,32 +54,32 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private boolean validate(){
         boolean valid = true;
-        if(name.isEmpty()|| name.length() > 32){
+        if(mName.isEmpty()|| mName.length() > 32){
             mEtName.setError("Please enter valid name");
             valid = false;
         }
 
-        if(username.isEmpty()|| username.length() > 32){
+        if(mUsername.isEmpty()|| mUsername.length() > 32){
             mEtUsername.setError("Please enter valid username");
             valid = false;
         }
 
-        if(email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        if(mEmail.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(mEmail).matches()){
             mEtEmail.setError("Please enter valid email");
             valid = false;
         }
 
-        if(password.isEmpty()){
+        if(mPassword.isEmpty()){
             mEtPassword.setError("Please enter Password");
             valid = false;
         }
 
-        if(confirmPassword.isEmpty()){
+        if(mConfirmPassword.isEmpty()){
             mEtConfirmPassword.setError("Please confirm your password");
             valid = false;
         }
 
-        if(!password.equals(confirmPassword)){
+        if(!mPassword.equals(mConfirmPassword)){
             mEtConfirmPassword.setError("Passwords does not match");
             valid = false;
         }
@@ -108,34 +88,33 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void onSignupSuccess(){
-        Cryptography crypto = new Cryptography("passwordmanager1");
+        Cryptography crypto = new Cryptography("passwordmanager1", this);
 
         try {
-            password = crypto.encrypt(password);
-        }catch (Exception e){}
+            mPassword = crypto.encrypt(mPassword);
+        }
+        catch (Exception e){
+            Log.e("Exception", "Something went wrong while encrypting password");
+        }
 
-        User newUser = new User(0, username, name, email, password, new ArrayList<Password>());
-        if(db.getUser(username, email, 1)){
+        User newUser = new User(0, mUsername, mName, mEmail, mPassword, new ArrayList<Password>());
+
+        if(db.getUser(mUsername, mEmail, 1)){
             Toast.makeText(this, "User with such username or email has all ready been registered", Toast.LENGTH_SHORT).show();
         }
+
         else{
-        //users.add(newUser);
             db.addUser(newUser, new Password());
             Toast.makeText(this, "Registered", Toast.LENGTH_SHORT).show();
-        //Bundle extras = new Bundle();
-        //Intent intent = new Intent();
-        //extras.putSerializable("users1", users);
-       // intent.putExtras(extras);
-        //setResult(Activity.RESULT_OK, intent);
             finish();
         }
     }
 
-    private void inizialize(){
-        name = mEtName.getText().toString().trim();
-        username = mEtUsername.getText().toString().trim();
-        email = mEtEmail.getText().toString().trim();
-        password = mEtPassword.getText().toString().trim();
-        confirmPassword = mEtConfirmPassword.getText().toString().trim();
+    private void initialize(){
+        mName = mEtName.getText().toString().trim();
+        mUsername = mEtUsername.getText().toString().trim();
+        mEmail = mEtEmail.getText().toString().trim();
+        mPassword = mEtPassword.getText().toString().trim();
+        mConfirmPassword = mEtConfirmPassword.getText().toString().trim();
     }
 }

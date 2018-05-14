@@ -22,8 +22,8 @@ import edu.khai.csn.abondar.passwordmanager.Model.Entities.DBHelper;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.Password;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {//implements View.OnClickListener {
-    ArrayList<Password> arrayList = new ArrayList<>();
-    Map<String, Integer> imageMap = new HashMap<>();
+    private ArrayList<Password> arrayList = new ArrayList<>();
+    private Map<String, Integer> imageMap = new HashMap<>();
     private OnItemClickListener mListener;
     private Context context;
 
@@ -60,7 +60,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
         return new MyViewHolder(view, mListener, context, arrayList, this);
     }
-    public int pos;
+    //public int pos;
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         int iconId = R.mipmap.ic_account_circle_black_48dp;
