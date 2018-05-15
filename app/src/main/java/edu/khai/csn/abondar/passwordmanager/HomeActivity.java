@@ -138,7 +138,7 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
     private void getCurrentUser(){
         Bundle extras = getIntent().getExtras();
         if(extras!=null)
-            mUser = (User) extras.getSerializable("mUser");
+            mUser = (User) extras.getSerializable("user");
        // lblUsername = findViewById(R.id.lblUsername5);
     }
 

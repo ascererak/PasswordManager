@@ -3,6 +3,7 @@ package edu.khai.csn.abondar.passwordmanager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -147,18 +148,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void forgotPassClick(View view) {
-        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
-        dlgAlert.setMessage("Coming soon...");
-        dlgAlert.setTitle("Password recovery");
-        dlgAlert.setPositiveButton("OK", null);
-        dlgAlert.setCancelable(true);
-        dlgAlert.setPositiveButton("Ok",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //dismiss the dialog
-                    }
-                });
-        dlgAlert.create().show();
+        Intent intent = new Intent(this, RestorePasswordActivity.class);
+        startActivity(intent);
     }
 
     public void btnSignupLSClick(View view) {

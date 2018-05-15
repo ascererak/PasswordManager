@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.khai.csn.abondar.passwordmanager">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
@@ -19,7 +21,9 @@
         <activity android:name=".HomeActivity" />
         <activity android:name=".RegistrationActivity" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".PasswordDetailsActivity"></activity>
+        <activity android:name=".PasswordDetailsActivity" />
+        <activity android:name=".FilesViewActivity" />
+        <activity android:name=".RestorePasswordActivity"></activity>
     </application>
 
 </manifest>

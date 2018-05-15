@@ -57,6 +57,8 @@ public class PasswordDetailsActivity extends AppCompatActivity {
         mCrypto = new Cryptography("passwordmanager1", this);
 
         setSupportActionBar(mToolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         final Password password = (Password) getIntent().getExtras().getSerializable("pass");
         mBtnSaveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,40 +144,44 @@ public class PasswordDetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (!mIsEditingAllowed) {
-            mService = mEtService.getText().toString().trim();
-            mPassword = mEtPassword.getText().toString().trim();
-            mUsername = mEtUsername.getText().toString().trim();
-            mAddInfo = mEtAddInfo.getText().toString().trim();
+        if(item.getItemId() == R.id.action_edit) {
+            if (!mIsEditingAllowed) {
+                mService = mEtService.getText().toString().trim();
+                mPassword = mEtPassword.getText().toString().trim();
+                mUsername = mEtUsername.getText().toString().trim();
+                mAddInfo = mEtAddInfo.getText().toString().trim();
 
-            mBtnSaveChanges.setVisibility(View.VISIBLE);
-            mBtnSaveChanges.setEnabled(true);
-            mEtService.setEnabled(true);
-            mEtUsername.setEnabled(true);
-            mEtPassword.setEnabled(true);
-            mEtAddInfo.setEnabled(true);
-            mSeekBar.setEnabled(true);
-            mSeekBar.setVisibility(View.VISIBLE);
-            mSeekBarShower.setVisibility(View.VISIBLE);
+                mBtnSaveChanges.setVisibility(View.VISIBLE);
+                mBtnSaveChanges.setEnabled(true);
+                mEtService.setEnabled(true);
+                mEtUsername.setEnabled(true);
+                mEtPassword.setEnabled(true);
+                mEtAddInfo.setEnabled(true);
+                mSeekBar.setEnabled(true);
+                mSeekBar.setVisibility(View.VISIBLE);
+                mSeekBarShower.setVisibility(View.VISIBLE);
+            } else {
+                mEtService.setText(mService);
+                mEtUsername.setText(mUsername);
+                mEtPassword.setText(mPassword);
+                mEtAddInfo.setText(mAddInfo);
+
+                mBtnSaveChanges.setVisibility(View.INVISIBLE);
+                mBtnSaveChanges.setEnabled(false);
+                mEtService.setEnabled(false);
+                mEtUsername.setEnabled(false);
+                mEtPassword.setEnabled(false);
+                mEtAddInfo.setEnabled(false);
+                mSeekBar.setEnabled(false);
+                mSeekBarShower.setVisibility(View.INVISIBLE);
+                mSeekBar.setVisibility(View.INVISIBLE);
+            }
+
+            mIsEditingAllowed = !mIsEditingAllowed;
         }
-        else {
-            mEtService.setText(mService);
-            mEtUsername.setText(mUsername);
-            mEtPassword.setText(mPassword);
-            mEtAddInfo.setText(mAddInfo);
-
-            mBtnSaveChanges.setVisibility(View.INVISIBLE);
-            mBtnSaveChanges.setEnabled(false);
-            mEtService.setEnabled(false);
-            mEtUsername.setEnabled(false);
-            mEtPassword.setEnabled(false);
-            mEtAddInfo.setEnabled(false);
-            mSeekBar.setEnabled(false);
-            mSeekBarShower.setVisibility(View.INVISIBLE);
-            mSeekBar.setVisibility(View.INVISIBLE);
+        else if(item.getItemId() == android.R.id.home) {
+            finish();
         }
-
-        mIsEditingAllowed = !mIsEditingAllowed;
         return super.onOptionsItemSelected(item);
     }
 

@@ -156,6 +156,28 @@ public class DBHelper extends SQLiteOpenHelper {
         return false;
     }
 
+    public String getUserByEmail(String email){
+        String password;
+        String selectQuery = "select * from " + USER_TABLE + " where " +
+                COLUMN_EMAIL + " = " + "'" + email +"'";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        cursor.moveToFirst();
+        if(cursor.getCount() <= 0) {
+            password =  null;
+        }
+        else{
+            password = cursor.getString(4);
+        }
+
+        cursor.close();
+        db.close();
+
+        return password;
+    }
+
     public User getUser(String username){
         SQLiteDatabase db = this.getReadableDatabase();
         User user = new User();
