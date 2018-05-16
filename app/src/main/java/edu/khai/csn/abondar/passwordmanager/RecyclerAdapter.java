@@ -1,5 +1,7 @@
 package edu.khai.csn.abondar.passwordmanager;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +22,8 @@ import java.util.Map;
 
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.DBHelper;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.Password;
+
+import static android.content.Context.CLIPBOARD_SERVICE;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {//implements View.OnClickListener {
     private ArrayList<Password> arrayList = new ArrayList<>();
@@ -44,14 +48,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         imageMap.put("google", R.drawable.ic_icon_google);
         ///imageMap.put("vk", 3);
         ///imageMap.put("steam", 4);
-        ///imageMap.put("twitch", 5);
-        ///imageMap.put("github", 6);
-        ///imageMap.put("elearn", 7);
+        //imageMap.put("twitch", R.drawable.ic_icon_twitch);
+        imageMap.put("github", R.drawable.ic_icon_github);
+        //imageMap.put("elearn", R.drawable.ic_icon_elearn);
         ///imageMap.put("dropbox", 8);
-        ///imageMap.put("appleid", 9);
-        ///imageMap.put("facebook", 10);
+        //imageMap.put("appleid", R.drawable.ic_icon_appleid);
+        //imageMap.put("facebook", R.drawable.ic_icon_facebook);
         ///imageMap.put("linkedin", 11);
-        ///imageMap.put("evernote", 12);
+        imageMap.put("evernote", R.drawable.ic_icon_evernote);
     }
 
     @Override
@@ -64,12 +68,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         int iconId = R.mipmap.ic_account_circle_black_48dp;
+
+        int clipBoardId = R.drawable.ic_icon_clipboard;
         if (imageMap.containsKey(arrayList.get(position).getServiceName().toLowerCase())) {
             iconId = imageMap.get(arrayList.get(position).getServiceName().toLowerCase());
         }
         holder.icon.setImageResource(iconId);
         holder.serviceName.setText(arrayList.get(position).getServiceName());
         holder.loginName.setText(arrayList.get(position).getUserName());
+        holder.clipboard.setImageResource(clipBoardId);
     }
 
     @Override
@@ -83,6 +90,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         TextView loginName;
         Context context;
         ArrayList<Password> mArrayList;
+        ImageView clipboard;
+        ClipboardManager clipboardManager;
+        ClipData clipData;
+        Cryptography crypto;
         //OnItemClickListener listener;
 
         public MyViewHolder(View itemView, final OnItemClickListener listener, final Context context, ArrayList<Password> arrayList, final RecyclerAdapter adapter) {
@@ -90,6 +101,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             icon = itemView.findViewById(R.id.imgAccount);
             serviceName = itemView.findViewById(R.id.serviceName);
             loginName = itemView.findViewById(R.id.login);
+            clipboard = itemView.findViewById(R.id.copyToClipboard);
+            clipboardManager=(ClipboardManager)context.getSystemService(CLIPBOARD_SERVICE);
+            crypto = new Cryptography("passwordmanager1", context);
+
             mArrayList = arrayList;
             this.context = context;
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -128,6 +143,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
                             }).create().show();
 
                     return false;
+                }
+            });
+            clipboard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String clipText = mArrayList.get(getAdapterPosition()).getPassword();
+                    try{clipText = crypto.decrypt(clipText);}catch (Exception e){}
+                    clipData = ClipData.newPlainText("password", clipText);
+                    clipboardManager.setPrimaryClip(clipData);
+
+                    Toast.makeText(context, "Password Copied", Toast.LENGTH_LONG).show();
                 }
             });
         }
