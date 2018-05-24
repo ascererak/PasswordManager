@@ -1,4 +1,4 @@
-package edu.khai.csn.abondar.passwordmanager.Model.Entities;
+package edu.khai.csn.abondar.passwordmanager.Model;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

@@ -15,19 +15,19 @@
         android:supportsRtl="true"
         tools:replace="android:theme"
         android:theme="@style/AppTheme">
-        <activity android:name=".Main">
+        <activity android:name=".View.Main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".HomeActivity" />
-        <activity android:name=".RegistrationActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".PasswordDetailsActivity" />
-        <activity android:name=".RestorePasswordActivity" />
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".View.HomeActivity" />
+        <activity android:name=".View.RegistrationActivity" />
+        <activity android:name=".View.LoginActivity" />
+        <activity android:name=".View.PasswordDetailsActivity" />
+        <activity android:name=".View.RestorePasswordActivity" />
+        <activity android:name=".View.SettingsActivity"></activity>
     </application>
 
 </manifest>

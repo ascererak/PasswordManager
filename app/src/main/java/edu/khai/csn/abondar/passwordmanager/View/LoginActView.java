@@ -8,9 +8,7 @@ public interface LoginActView {
 
     void encrypt();
 
-    void animateButtonWidth();
-
-    void fadeOutTextAndShowProgressDialog();
-
+    void setPassword(String password);
+    String getPassword();
 
 }

@@ -1,10 +1,8 @@
-package edu.khai.csn.abondar.passwordmanager;
+package edu.khai.csn.abondar.passwordmanager.View;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
@@ -12,26 +10,25 @@ import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
-import edu.khai.csn.abondar.passwordmanager.Model.Entities.DBHelper;
+
+import edu.khai.csn.abondar.passwordmanager.Model.DBHelper;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.User;
+import edu.khai.csn.abondar.passwordmanager.Presenter.CryptoPresenter;
+import edu.khai.csn.abondar.passwordmanager.R;
 import edu.khai.csn.abondar.passwordmanager.databinding.ActivityLoginBinding;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, LoginActView {
 
     protected FrameLayout btnLogin;
     protected EditText username;
@@ -45,7 +42,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected View reveal;
     protected Intent intent;
     protected String mPassword;
-
+    protected CryptoPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +63,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         username = findViewById(R.id.etUsername);
         password = findViewById(R.id.etPassword);
         forgotPass = findViewById(R.id.tvForgotPass);
+        mPresenter = new CryptoPresenter(this);
     }
 
     @Override
@@ -91,17 +89,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         load();
     }
 
+    @Override
     public void encrypt(){
+        mPresenter.encrypt();
+    }
 
-        String key = "passwordmanager1";
-        Cryptography crypto = new Cryptography(key);
+    @Override
+    public void setPassword(String password) {
+        mPassword = password;
+    }
 
-        try {
-            mPassword = crypto.encrypt(mPassword);
-        }
-        catch (Exception e) {
-            Log.e("Exception", "Something went wrong while encrypting password");
-        }
+    @Override
+    public String getPassword() {
+        return mPassword;
     }
 
     private void load() {

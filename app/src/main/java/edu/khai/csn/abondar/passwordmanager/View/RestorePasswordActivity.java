@@ -1,21 +1,22 @@
-package edu.khai.csn.abondar.passwordmanager;
+package edu.khai.csn.abondar.passwordmanager.View;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import edu.khai.csn.abondar.passwordmanager.Model.Entities.DBHelper;
+import edu.khai.csn.abondar.passwordmanager.Model.Cryptography;
+import edu.khai.csn.abondar.passwordmanager.Model.DBHelper;
+import edu.khai.csn.abondar.passwordmanager.Model.MailSender;
+import edu.khai.csn.abondar.passwordmanager.R;
 
 public class RestorePasswordActivity extends AppCompatActivity {
 

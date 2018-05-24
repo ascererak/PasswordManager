@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="edu.khai.csn.abondar.passwordmanager.HomeActivity">
+        tools:context="edu.khai.csn.abondar.passwordmanager.View.HomeActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,7 +45,7 @@
                 android:layout_marginTop="56dp" />
             <!--<fragment-->
             <!--android:id="@+id/fragment"-->
-            <!--android:name="edu.khai.csn.abondar.passwordmanager.DefaultFragment"-->
+            <!--android:naedu.khai.csn.abondar.passwordmanager.View.DefaultFragmentment"-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="match_parent"-->
             <!--android:layout_alignParentLeft="true"-->

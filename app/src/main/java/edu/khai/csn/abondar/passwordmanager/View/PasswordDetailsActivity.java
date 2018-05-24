@@ -1,4 +1,4 @@
-package edu.khai.csn.abondar.passwordmanager;
+package edu.khai.csn.abondar.passwordmanager.View;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.SeekBar;
@@ -17,9 +16,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import edu.khai.csn.abondar.passwordmanager.Model.Entities.DBHelper;
-import edu.khai.csn.abondar.passwordmanager.Model.Entities.GeneratePassword;
+import edu.khai.csn.abondar.passwordmanager.Model.Cryptography;
+import edu.khai.csn.abondar.passwordmanager.Model.DBHelper;
+import edu.khai.csn.abondar.passwordmanager.Model.GeneratePassword;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.Password;
+import edu.khai.csn.abondar.passwordmanager.R;
 
 public class PasswordDetailsActivity extends AppCompatActivity {
 

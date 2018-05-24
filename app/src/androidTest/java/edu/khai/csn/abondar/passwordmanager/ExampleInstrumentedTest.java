@@ -1,5 +1,6 @@
 package edu.khai.csn.abondar.passwordmanager;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
@@ -9,12 +10,22 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Date;
 
-import edu.khai.csn.abondar.passwordmanager.Model.Entities.DBHelper;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
+import edu.khai.csn.abondar.passwordmanager.Model.Cryptography;
+import edu.khai.csn.abondar.passwordmanager.Model.DBHelper;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.Password;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.User;
+import edu.khai.csn.abondar.passwordmanager.Presenter.RecyclerAdapter;
+import edu.khai.csn.abondar.passwordmanager.View.HomeActivity;
 
 import static org.junit.Assert.*;
 
@@ -60,5 +71,92 @@ public class ExampleInstrumentedTest {
     @Test
     public void getUserTest() {
         assertTrue(db.getUser("lex", encryptedPass));
+    }
+
+    @Test
+    public void getUserOverloadedTest() {
+        assertTrue(db.getUser("lex3", "danon@gmail.com", 1));
+    }
+
+    @Test
+    public void encryptTest(){
+        String expected = encryptedPass;//"TOiKk+Nsr7SAnkH+Lbuh/Q==";
+        String tested = "qwerty";
+        String actual = "";
+
+        try {
+            actual = cryptography.encrypt(tested);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void decryptTest() {
+        String expected = "qwerty";
+        String tested = encryptedPass;//"TOiKk+Nsr7SAnkH+Lbuh/Q==";
+        String actual = "";
+
+        try{
+            actual = cryptography.decrypt(tested);
+        }
+        catch (Exception e){}
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getUserByEmailTest() {
+        String actual = db.getUserByEmail("danon@gmail.com");
+
+        assertEquals(encryptedPass, actual);
+    }
+
+    @Test
+    public void getUserByUsernameTest() {
+        String expected = "Alexey Bondar";
+        User user = db.getUser("lex3");
+        String actual = user.getName();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getUserByUsernameTestPassword() {
+        String expected = encryptedPass;
+        User user = db.getUser("lex3");
+        String actual = user.getMasterPassword();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getUserByUsernameTestUsername() {
+        String expected = "lex3";
+        User user = db.getUser("lex3");
+        String actual = user.getUsername();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getUserByUsernameTestEmail() {
+        String expected = "danon@gmail.com";
+        User user = db.getUser("lex3");
+        String actual = user.getEmail();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getItemCountTest(){
+        ArrayList<Password> list = new ArrayList<>(2);
+        RecyclerAdapter adapter = new RecyclerAdapter(list, InstrumentationRegistry.getTargetContext());
+        int actual = adapter.getItemCount();
+        int expected = list.size();
+
+        assertEquals(expected, actual);
     }
 }

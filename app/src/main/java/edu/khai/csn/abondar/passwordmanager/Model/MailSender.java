@@ -1,4 +1,4 @@
-package edu.khai.csn.abondar.passwordmanager;
+package edu.khai.csn.abondar.passwordmanager.Model;
 
 import java.security.Security;
 import java.util.Properties;
@@ -15,6 +15,8 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import android.util.Log;
+
+import edu.khai.csn.abondar.passwordmanager.Model.JSSEProvider;
 
 
 /**

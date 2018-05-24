@@ -1,4 +1,4 @@
-package edu.khai.csn.abondar.passwordmanager.Model.Entities;
+package edu.khai.csn.abondar.passwordmanager.Model;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,6 +11,9 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import edu.khai.csn.abondar.passwordmanager.Model.Entities.Password;
+import edu.khai.csn.abondar.passwordmanager.Model.Entities.User;
 
 
 /**

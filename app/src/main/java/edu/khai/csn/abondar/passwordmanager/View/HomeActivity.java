@@ -1,4 +1,4 @@
-package edu.khai.csn.abondar.passwordmanager;
+package edu.khai.csn.abondar.passwordmanager.View;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -33,9 +33,11 @@ import android.databinding.DataBindingUtil;
 
 import java.util.ArrayList;
 
-import edu.khai.csn.abondar.passwordmanager.Model.Entities.DBHelper;
+import edu.khai.csn.abondar.passwordmanager.Model.DBHelper;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.Password;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.User;
+import edu.khai.csn.abondar.passwordmanager.R;
+import edu.khai.csn.abondar.passwordmanager.Presenter.RecyclerAdapter;
 import edu.khai.csn.abondar.passwordmanager.databinding.ActivityHomeBinding;
 
 /**

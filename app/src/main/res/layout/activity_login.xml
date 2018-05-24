@@ -5,7 +5,7 @@
 
         <variable
             name="event"
-            type="edu.khai.csn.abondar.passwordmanager.LoginActivity" />
+            type="edu.khai.csn.abondar.passwordmanager.View.LoginActivity" />
     </data>
 
     <RelativeLayout

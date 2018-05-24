@@ -1,4 +1,4 @@
-package edu.khai.csn.abondar.passwordmanager;
+package edu.khai.csn.abondar.passwordmanager.Presenter;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +19,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.khai.csn.abondar.passwordmanager.Model.Entities.DBHelper;
+import edu.khai.csn.abondar.passwordmanager.Model.Cryptography;
+import edu.khai.csn.abondar.passwordmanager.Model.DBHelper;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.Password;
+import edu.khai.csn.abondar.passwordmanager.R;
+import edu.khai.csn.abondar.passwordmanager.View.PasswordDetailsActivity;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
 

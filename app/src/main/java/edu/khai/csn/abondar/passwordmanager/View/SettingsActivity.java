@@ -1,4 +1,4 @@
-package edu.khai.csn.abondar.passwordmanager;
+package edu.khai.csn.abondar.passwordmanager.View;
 
 import android.content.ContentUris;
 import android.content.Context;
@@ -17,13 +17,11 @@ import android.util.Log;
 import android.util.Xml;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 import net.rdrei.android.dirchooser.DirectoryChooserFragment;
 
@@ -40,11 +38,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.regex.Pattern;
 
-import edu.khai.csn.abondar.passwordmanager.Model.Entities.DBHelper;
+import edu.khai.csn.abondar.passwordmanager.Model.Cryptography;
+import edu.khai.csn.abondar.passwordmanager.Model.DBHelper;
+import edu.khai.csn.abondar.passwordmanager.Model.IOHelper;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.Password;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.User;
+import edu.khai.csn.abondar.passwordmanager.R;
 
 public class SettingsActivity extends AppCompatActivity implements DirectoryChooserFragment.OnFragmentInteractionListener {
 
@@ -52,7 +52,6 @@ public class SettingsActivity extends AppCompatActivity implements DirectoryChoo
     private FrameLayout mExport;
     private ArrayList<Password> mPasswords;
     private User mUser;
-    // private TextView xmlParsed;
     private TextView mName;
     private TextView mUsername;
     private TextView mEmail;
@@ -60,7 +59,7 @@ public class SettingsActivity extends AppCompatActivity implements DirectoryChoo
     private FrameLayout btnChangeMaster;
     private DBHelper db;
     private Cryptography crypto;
-    Toolbar mToolBar;
+    private Toolbar mToolBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +72,6 @@ public class SettingsActivity extends AppCompatActivity implements DirectoryChoo
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        // xmlParsed = findViewById(R.id.xmlParsed);
         mName = findViewById(R.id.tvName);
         mUsername = findViewById(R.id.tvUsernameSettings);
         mEmail = findViewById(R.id.tvEmailSettings);
@@ -88,7 +86,7 @@ public class SettingsActivity extends AppCompatActivity implements DirectoryChoo
             mUser = (User) extras.getSerializable("user");
         }
         mName.setText("Name: " + mUser.getName());
-        mUsername.setText("Username: " + mUser.getName());
+        mUsername.setText("Username: " + mUser.getUsername());
         mEmail.setText("Email: " + mUser.getEmail());
         try {
             mMasterPass.setText(crypto.decrypt(mUser.getMasterPassword()));

@@ -1,4 +1,4 @@
-package edu.khai.csn.abondar.passwordmanager;
+package edu.khai.csn.abondar.passwordmanager.View;
 
 
 import android.os.Bundle;
@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.SeekBar;
@@ -15,10 +14,11 @@ import android.widget.TextView;
 
 import java.util.Date;
 
-import edu.khai.csn.abondar.passwordmanager.Model.Entities.DBHelper;
-import edu.khai.csn.abondar.passwordmanager.Model.Entities.GeneratePassword;
+import edu.khai.csn.abondar.passwordmanager.Model.Cryptography;
+import edu.khai.csn.abondar.passwordmanager.Model.DBHelper;
+import edu.khai.csn.abondar.passwordmanager.Model.GeneratePassword;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.Password;
-import edu.khai.csn.abondar.passwordmanager.Presenter.CryptoPresenter;
+import edu.khai.csn.abondar.passwordmanager.R;
 
 
 /**

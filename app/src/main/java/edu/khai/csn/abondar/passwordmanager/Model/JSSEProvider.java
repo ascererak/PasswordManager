@@ -1,4 +1,4 @@
-package edu.khai.csn.abondar.passwordmanager;
+package edu.khai.csn.abondar.passwordmanager.Model;
 
 import java.security.AccessController;
 import java.security.Provider;

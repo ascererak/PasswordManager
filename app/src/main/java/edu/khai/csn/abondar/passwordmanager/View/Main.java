@@ -1,9 +1,11 @@
-package edu.khai.csn.abondar.passwordmanager;
+package edu.khai.csn.abondar.passwordmanager.View;
 
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import edu.khai.csn.abondar.passwordmanager.R;
 
 /**
  * Activity for splash screen
