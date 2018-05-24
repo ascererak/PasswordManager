@@ -6,11 +6,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.DBHelper;
@@ -19,32 +21,23 @@ public class RestorePasswordActivity extends AppCompatActivity {
 
     private EditText mEtEmail;
     private String mEmail;
-    private Button mBtnRestorePassword;
+    private FrameLayout mBtnRestorePassword;
     private final String mSenderEmail = "recover.pass.manager@gmail.com";
     private final String mSenderPassword = "qw56io09wwdc";
     private static final String mLetterTheme = "Password recovery";
     private static final String mBodyPart1 = "This is password recovery letter.\nYour password is: ";
     private static final String mBodyPart2 = ".\nIf you didn't request password recovery, just ignore this letter.\n\n" +
             "If you are having any troubles using our service, please give us a feedback in reply to this letter.";
-    DBHelper db;
-    Context context;
-    Cryptography crypto;
+    private DBHelper db;
+    private Context context;
+    private Cryptography crypto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restore_password);
 
-        Toolbar mToolBar = findViewById(R.id.navAction);
-        setSupportActionBar(mToolBar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        mEtEmail = findViewById(R.id.email_restpass);
-        mBtnRestorePassword = findViewById(R.id.btnRestPass);
-        db = new DBHelper(this);
-        context = this;
-        crypto = new Cryptography("passwordmanager1", context);
+        initialize();
 
         mBtnRestorePassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +54,7 @@ public class RestorePasswordActivity extends AppCompatActivity {
                         try {
                             password = crypto.decrypt(password);
                         } catch (Exception e) {
+                            Log.e("Exception", "Error while decrypting password");
                         }
                         final String body = mBodyPart1 + password + mBodyPart2;
                         Thread thread = new Thread(new Runnable() {
@@ -70,7 +64,7 @@ public class RestorePasswordActivity extends AppCompatActivity {
 
                                 try {
                                     MailSender sender = new MailSender(mSenderEmail, mSenderPassword);
-                                    sender.sendMail(mLetterTheme, body, "admin@gmail.com", mEmail, "");
+                                    sender.sendMail(mLetterTheme, body, "admin@gmail.com", mEmail);
                                 } catch (Exception e) {
 
                                 }
@@ -96,6 +90,20 @@ public class RestorePasswordActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void initialize(){
+       //Toolbar mToolBar = findViewById(R.id.navAction);
+       //setSupportActionBar(mToolBar);
+       //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       //getSupportActionBar().setDisplayShowHomeEnabled(true);
+       //getSupportActionBar().setSubtitle("Forgot your password?");
+
+        mEtEmail = findViewById(R.id.email_restpass);
+        mBtnRestorePassword = findViewById(R.id.btnRestPass);
+        db = new DBHelper(this);
+        context = this;
+        crypto = new Cryptography("passwordmanager1");
     }
 
     @Override

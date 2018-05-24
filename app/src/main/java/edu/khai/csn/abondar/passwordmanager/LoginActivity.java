@@ -81,7 +81,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         else{
             Toast.makeText(this, "There is no such user or password is incorrect", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void prepareToLaunchActivity(String _username) {
@@ -95,7 +94,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void encrypt(){
 
         String key = "passwordmanager1";
-        Cryptography crypto = new Cryptography(key, this);
+        Cryptography crypto = new Cryptography(key);
 
         try {
             mPassword = crypto.encrypt(mPassword);

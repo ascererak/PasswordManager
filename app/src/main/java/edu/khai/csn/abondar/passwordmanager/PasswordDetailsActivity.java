@@ -2,11 +2,13 @@ package edu.khai.csn.abondar.passwordmanager;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
@@ -33,33 +35,21 @@ public class PasswordDetailsActivity extends AppCompatActivity {
     private SeekBar mSeekBar;
     private DBHelper mDb;
     private int mGeneratedPasswordLength;
-    private boolean mIsEditingAllowed = false;
+    private boolean mIsEditingAllowed;
     private Cryptography mCrypto;
-    private Button mBtnSaveChanges;
+    private FrameLayout mBtnSaveChanges;
+    TextView mTvCreationDate;
+    TextView mTvModifingDate;
+    Toolbar mToolBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_details);
-
-        mGeneratedPasswordLength = 8;
-        mEtService = findViewById(R.id.ServiceShow);
-        mEtUsername = findViewById(R.id.UsernameShow);
-        mEtPassword = findViewById(R.id.PasswordShow);
-        mBtnSaveChanges = findViewById(R.id.btnSaveChanges);
-        TextView mTvCreationDate = findViewById(R.id.tvCreationDate);
-        mEtAddInfo = findViewById(R.id.AddInfoShow);
-        TextView mTvModifingDate = findViewById(R.id.tvModifingDate);
-        Toolbar mToolBar = findViewById(R.id.navAction);
-        mSeekBarShower = findViewById(R.id.seekBarShowerWD);
-        mSeekBar = findViewById(R.id.seekBarWD);
-        mSeekBar.setProgress(8);
-        mCrypto = new Cryptography("passwordmanager1", this);
-
-        setSupportActionBar(mToolBar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         final Password password = (Password) getIntent().getExtras().getSerializable("pass");
+
+        initialize();
+
         mBtnSaveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,9 +84,33 @@ public class PasswordDetailsActivity extends AppCompatActivity {
 
             }
         });
+
+        setEditTexts(password);
+    }
+
+    private void initialize() {
+        mGeneratedPasswordLength = 8;
+        mIsEditingAllowed = false;
+        mEtService = findViewById(R.id.ServiceShow);
+        mEtUsername = findViewById(R.id.UsernameShow);
+        mEtPassword = findViewById(R.id.PasswordShow);
+        mBtnSaveChanges = findViewById(R.id.btnSaveChanges);
+        mTvCreationDate = findViewById(R.id.tvCreationDate);
+        mEtAddInfo = findViewById(R.id.AddInfoShow);
+        mTvModifingDate = findViewById(R.id.tvModifingDate);
+        mToolBar = findViewById(R.id.navAction);
+        mSeekBarShower = findViewById(R.id.seekBarShowerWD);
+        mSeekBar = findViewById(R.id.seekBarWD);
+        mSeekBar.setProgress(8);
+        mCrypto = new Cryptography("passwordmanager1");
         mDb = new DBHelper(this);
 
+        setSupportActionBar(mToolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
 
+    private void setEditTexts(Password password) {
         mEtService.setText(password.getServiceName());
         mEtUsername.setText(password.getUserName());
         mEtAddInfo.setText(password.getAdditionalInformation());
@@ -109,42 +123,34 @@ public class PasswordDetailsActivity extends AppCompatActivity {
         try {
             decrPassword = mCrypto.decrypt(password.getPassword());
         } catch (Exception e) {
+            Log.e("Decryption exeption", "PasswordDetailsActivity");
         }
         mEtPassword.setText(decrPassword);
     }
 
     public void editTextToString() {
-
         mService = mEtService.getText().toString().trim();
         mPassword = mEtPassword.getText().toString().trim();
         try {
             mPassword = mCrypto.encrypt(mPassword);
         } catch (Exception e) {
+            Log.e("Exeption", "Error while encryption");
         }
         mUsername = mEtUsername.getText().toString().trim();
         mAddInfo = mEtAddInfo.getText().toString().trim();
-
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.navigation_menu_edit, menu);
-        //MenuItem menuItem = menu.findItem(R.id.action_edit);
-        //Button button = (Button) MenuItemCompat.getActionView(menuItem);
-//
-        //button.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View v) {
-        //
-        //    }
-        //});
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_edit) {
+        if (item.getItemId() == R.id.action_edit) {
+
             if (!mIsEditingAllowed) {
                 mService = mEtService.getText().toString().trim();
                 mPassword = mEtPassword.getText().toString().trim();
@@ -152,12 +158,6 @@ public class PasswordDetailsActivity extends AppCompatActivity {
                 mAddInfo = mEtAddInfo.getText().toString().trim();
 
                 mBtnSaveChanges.setVisibility(View.VISIBLE);
-                mBtnSaveChanges.setEnabled(true);
-                mEtService.setEnabled(true);
-                mEtUsername.setEnabled(true);
-                mEtPassword.setEnabled(true);
-                mEtAddInfo.setEnabled(true);
-                mSeekBar.setEnabled(true);
                 mSeekBar.setVisibility(View.VISIBLE);
                 mSeekBarShower.setVisibility(View.VISIBLE);
             } else {
@@ -167,19 +167,17 @@ public class PasswordDetailsActivity extends AppCompatActivity {
                 mEtAddInfo.setText(mAddInfo);
 
                 mBtnSaveChanges.setVisibility(View.INVISIBLE);
-                mBtnSaveChanges.setEnabled(false);
-                mEtService.setEnabled(false);
-                mEtUsername.setEnabled(false);
-                mEtPassword.setEnabled(false);
-                mEtAddInfo.setEnabled(false);
-                mSeekBar.setEnabled(false);
                 mSeekBarShower.setVisibility(View.INVISIBLE);
                 mSeekBar.setVisibility(View.INVISIBLE);
             }
-
+            mBtnSaveChanges.setEnabled(!mIsEditingAllowed);
+            mEtService.setEnabled(!mIsEditingAllowed);
+            mEtUsername.setEnabled(!mIsEditingAllowed);
+            mEtPassword.setEnabled(!mIsEditingAllowed);
+            mEtAddInfo.setEnabled(!mIsEditingAllowed);
+            mSeekBar.setEnabled(!mIsEditingAllowed);
             mIsEditingAllowed = !mIsEditingAllowed;
-        }
-        else if(item.getItemId() == android.R.id.home) {
+        } else if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -193,6 +191,7 @@ public class PasswordDetailsActivity extends AppCompatActivity {
         try {
             date = format.parse(oldDate);
         } catch (ParseException e) {
+            Log.e("ParseException", "Couldn't parse date, PasswordDetailsActivity");
         }
         String result = newDateFormat.format(date);
 
@@ -204,6 +203,7 @@ public class PasswordDetailsActivity extends AppCompatActivity {
         try {
             mEtPassword.setText(generator.generate(mGeneratedPasswordLength));
         } catch (Exception e) {
+            Log.e("Exception", "Exception while generating password");
         }
     }
 }

@@ -1,12 +1,18 @@
 package edu.khai.csn.abondar.passwordmanager;
 
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
@@ -19,26 +25,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
-import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Toast;
+import android.content.Intent;
+import android.databinding.DataBindingUtil;
 
 import java.util.ArrayList;
-import android.os.Handler;
 
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.DBHelper;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.Password;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.User;
 import edu.khai.csn.abondar.passwordmanager.databinding.ActivityHomeBinding;
 
+/**
+ * Class represents home screen activity
+ */
 public class HomeActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
         NavigationView.OnNavigationItemSelectedListener {
 
@@ -54,76 +56,71 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
     private RecyclerView mRecyclerView;
     private RecyclerAdapter mAdapter;
     private ActivityHomeBinding mBinding;
-    protected View mReveal;
+    private android.support.v7.widget.Toolbar mToolBar;
 
+    /**
+     * Method that is responsible for activity creation
+     * called automatically before activity started
+     *
+     * @param savedInstanceState helps to recreate activity state when it reopened
+     */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_home);
+        // Connect java code and xml markup
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
-        //LoginActivity loginActivity = (LoginActivity) getParent();
-        //loginActivity.reset();
 
+        initialize();
+
+        buildRecyclerView();
+    }
+
+    /**
+     * Initialization of necessary variables and
+     * connection controls from the markup with the corresponding variables
+     */
+    private void initialize() {
+        // Get information about current logged in user
         getCurrentUser();
-      //  lblUsername.setText(mUser.getUsername());
+
+        // Get list of passwords from database
         mDb = new DBHelper(this);
         mPasswordList = mDb.getPassword(mUser.getUsername());
-        android.support.v7.widget.Toolbar mToolBar = findViewById(R.id.navAction);
+
+        // Set custom tool bar instead of standard actionbar
+        mToolBar = findViewById(R.id.navAction);
         setSupportActionBar(mToolBar);
+
+        // Initialize floating animation button
         mFab = findViewById(R.id.fab);
+        // Initialize drawer layout
+        mDrawerLayout = findViewById(R.id.drawerLayout);
+
+        // Initialize animation variables
         mRotateBackward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_backward);
         mRotateForward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_forward);
-        //layoutContent = findViewById(R.id.layoutContent);
-        //usernameOnNavHeader = findViewById(R.id.username_on_nav_header);
-        //usernameOnNavHeader.setText(mUser.getUsername());
 
-        mDrawerLayout = findViewById(R.id.drawerLayout);
-        mReveal = findViewById(R.id.reveal);
-
+        // Set layout for navigation view
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
 
+        // Set navigation view open button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0f0c29")));
 
-
-        buildRecyclerView();
-
-        //mRecyclerView.setFocusable(false);
-        //mRecyclerView.setFocusableInTouchMode(false);
-
-        mAdapter.setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick (int position) {
-
-                //mServiceName = mPasswordList.get(position).getServiceName();
-                //callWatchPasswordDetailsActivity();
-            }
-        }
-);
-
-
-        //int count = 0;
-//
-        //for(Password name : passwordList) {//c_services) {
-        //    arrayList.add(new Service(name, accountLogins[count], accountImages[count]));
-        //    count++;
-        //}
-
-
-
-
-        NavigationView navigationView = mBinding.navigationView;//findViewById(R.id.navigation_view);
+        // Replace standard toolbar menu with navigation view
+        NavigationView navigationView = mBinding.navigationView;
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    public void buildRecyclerView(){
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+    /**
+     * Set recycler view to display list of passwords
+     */
+    public void buildRecyclerView() {
+        mRecyclerView = findViewById(R.id.recyclerview);
         mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mAdapter = new RecyclerAdapter(mPasswordList, this);
@@ -133,217 +130,303 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     /**
-     * Getting a current mUser
+     * Getting a current logged in user
      */
-    private void getCurrentUser(){
+    private void getCurrentUser() {
         Bundle extras = getIntent().getExtras();
-        if(extras!=null)
+        if (extras != null)
             mUser = (User) extras.getSerializable("user");
-       // lblUsername = findViewById(R.id.lblUsername5);
     }
 
+    /**
+     * Handling selection menu items
+     *
+     * @param item selected menu item
+     * @return was item been selected or wasn't
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (mToggle.onOptionsItemSelected(item)){
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return mToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Continue working with the activity after it was paused and reopened
+     */
     @Override
-    public  void onStart(){
+    public void onStart() {
         super.onStart();
-        mDb = new DBHelper(this);
+
+        // Get password list from database
         mPasswordList = mDb.getPassword(mUser.getUsername());
+        // Set adapter for recycler view
         mAdapter = new RecyclerAdapter(mPasswordList, this);
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    /**
+     * Menu creation, setting search button
+     *
+     * @param menu menu
+     * @return successfully created menu
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.navigation_menu_search, menu);
+        // Connection with menu xml markup
         MenuItem menuItem = menu.findItem(R.id.action_search);
+        // Set search view on the toolbar
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        // Set listener when text is changed
         searchView.setOnQueryTextListener(this);
 
         return true;
     }
 
+    /**
+     * Submit inputted text in the search field
+     *
+     * @param s
+     * @return
+     */
     @Override
     public boolean onQueryTextSubmit(String s) {
         return false;
     }
 
+    /**
+     * Change display list passwords when search field is changed
+     *
+     * @param s string that was inputted in search field
+     * @return
+     */
     @Override
     public boolean onQueryTextChange(String s) {
 
         s = s.toLowerCase();
+
+        // Create new list for found passwords
         ArrayList<Password> newList = new ArrayList<>();
-        for(Password password : mPasswordList){
+
+        // Look for suitable passwords and add them to new list
+        for (Password password : mPasswordList) {
             String serviceName = password.getServiceName().toLowerCase();
 
-            if(serviceName.contains(s))
+            if (serviceName.contains(s))
                 newList.add(password);
         }
+
+        // Set filter to display only password
+        // that are suit to the search query
         mAdapter.setFilter(newList);
 
         return true;
     }
 
+    /**
+     * Disallow move to previous activity
+     * on click to system back button
+     * pauses current activity
+     */
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         moveTaskToBack(true);
     }
 
-    //@Override
-    //public void onPause() {
-    //    super.onPause();
-    //    LoginActivity login = (LoginActivity) getParent();
-    //    login.mBinding.mReveal.setVisibility(View.INVISIBLE);
-    //    finish();
-    //}
-
-
+    /**
+     * Handling what items from navigation view are selected
+     *
+     * @param item
+     * @return successfully selected item
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-        Fragment fragment = null;
         int id = item.getItemId();
 
-        switch (id){
-            case R.id.nav_home:
-                fragment = new DefaultFragment();
-                break;
-            case R.id.nav_account:
-               // fragment = new AccountFragment();
-                break;
-            case R.id.nav_import_export:
-              //  fragment = new ImportExportFragment();
-                break;
+        // Identify what item was selected
+        switch (id) {
             case R.id.nav_settings:
-            //    fragment = new SettingsFragment();
+                // Create new intent of Settings activity
+                Intent intent = new Intent(this, SettingsActivity.class);
+                // Create new bundle to transfer data to new activity
+                Bundle extras = new Bundle();
+                // Add data to bundle
+                extras.putSerializable("passwords", mPasswordList);
+                extras.putSerializable("user", getUser());
+                // Add bundle to intent
+                intent.putExtras(extras);
+                // Start new activity
+                startActivityForResult(intent, 1101);
                 break;
             case R.id.nav_logout:
+                // Finnish current activity, go to the login activity
                 LoginActivity login = (LoginActivity) getParent();
                 login.mBinding.reveal.setVisibility(View.INVISIBLE);
                 finish();
                 return false;
         }
+        // Close drawer
         mDrawerLayout.closeDrawers();
         return false;
     }
 
+    /**
+     * Handler floating action button click
+     *
+     * @param v view
+     */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void addPassword(View v){
+    public void addPassword(View v) {
+
+        if (!mIsFabOpen) {
+            openFabAnim();
+        } else {
+            closeFabAnim();
+        }
+    }
+
+    /**
+     * Reveal Animation opening add password fragment
+     */
+    private void openFabAnim() {
         Fragment fragment;
+        // Animate floating action button, spin
+        animateFab();
 
-        if(!mIsFabOpen) {
-            animateFab();
-            mBinding.fab.setElevation(0f);
-            mBinding.reveal.setVisibility(View.VISIBLE);
+        mBinding.fab.setElevation(0f);
+        mBinding.reveal.setVisibility(View.VISIBLE);
 
-            int cx = mBinding.reveal.getWidth();
-            int cy = mBinding.reveal.getHeight();
+        // Coordinates from where start revelation
+        int cx = mBinding.reveal.getWidth();
+        int cy = mBinding.reveal.getHeight();
 
-            int x = (int) (mBinding.fab.getMeasuredHeight()/2 + mBinding.fab.getX());
-            int y = (int) (mBinding.fab.getMeasuredHeight()/2 + mBinding.fab.getY());
-
-            float finalRadius = Math.max(cx, cy) * 1.2f;
-
-            Animator reveal = ViewAnimationUtils.createCircularReveal(mBinding.reveal, x, y, 56, finalRadius);
-            reveal.setDuration(350);
-            reveal.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                    //finish();
-                    //  reset();
-                }});
-
-            reveal.start();
-
-            fragment = new AddPasswordFragment();
-            FragmentManager manager = getSupportFragmentManager();
-            final FragmentTransaction transaction = manager.beginTransaction();
-            transaction.addToBackStack(null);
-            transaction.replace(R.id.fragment, fragment);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    transaction.commit();
-                    mBinding.reveal.setVisibility(View.INVISIBLE);
-                }
-            }, 300);
-        }
-
-        else{
-            animateFab();
-            mBinding.reveal.setVisibility(View.VISIBLE);
-            int x = mBinding.layoutContent.getRight();
-            int y = mBinding.layoutContent.getBottom();
-
-            int startRadius = Math.max(mBinding.layoutContent.getWidth(), mBinding.layoutContent.getHeight());
-            int endRadius = 0;
-
-            Animator anim = ViewAnimationUtils.createCircularReveal(mBinding.reveal, x, y, startRadius, endRadius);
-            anim.setDuration(350);
-            anim.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                }
-            });
-            anim.start();
-            fragment = new DefaultFragment();
-            FragmentManager manager = getSupportFragmentManager();
-            final FragmentTransaction transaction = manager.beginTransaction();
-            transaction.addToBackStack(null);
-            transaction.replace(R.id.fragment, fragment);
-            transaction.commit();
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //transaction.commit();
-                    mBinding.reveal.setVisibility(View.INVISIBLE);
-                }
-            }, 300);
-        }
+        // Coordinates till where continue revelation
+        int x = (int) (mBinding.fab.getMeasuredHeight() / 2 + mBinding.fab.getX());
+        int y = (int) (mBinding.fab.getMeasuredHeight() / 2 + mBinding.fab.getY());
 
 
+        float finalRadius = Math.max(cx, cy) * 1.2f;
 
+        // Initialize animation
+        Animator reveal = ViewAnimationUtils.createCircularReveal(mBinding.reveal, x, y, 56, finalRadius);
+        reveal.setDuration(350);
+        reveal.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+            }
+        });
 
+        // Start animation
+        reveal.start();
 
+        // Create new fragment
+        fragment = new AddPasswordFragment();
+        FragmentManager manager = getSupportFragmentManager();
+        final FragmentTransaction transaction = manager.beginTransaction();
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.fragment, fragment);
 
-
-        ///extras = new Bundle();
-        ///extras = fragment.getArguments().getBundle("password");
-        ///Password password = (Password) extras.getSerializable("password");
-        ///mDb.addPassword(mUser, password);
-        //animateFab();
-        //Intent intent = new Intent(this, AddPasswordActivity.class);
-        //Bundle extras = new Bundle();
-        //extras.putSerializable("mUser", mUser);
-        //intent.putExtras(extras);
-        //startActivityForResult(intent, 2);
-        //mFab.startAnimation(mRotateBackward);
-        //startActivity(intent);
+        // Perform delayed fragment opening in separate thread
+        // to let the revelation animation end
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                transaction.commit();
+                mBinding.reveal.setVisibility(View.INVISIBLE);
+            }
+        }, 300);
     }
 
+    /**
+     * Reveal Animation opening add password fragment
+     */
+    private void closeFabAnim() {
+        Fragment fragment;
+        // Animate floating action button, spin
+        animateFab();
+
+        mBinding.reveal.setVisibility(View.VISIBLE);
+
+        // Coordinates till where continue revelation
+        int x = mBinding.layoutContent.getRight();
+        int y = mBinding.layoutContent.getBottom();
+
+        // Coordinates from where start revelation
+        int startRadius = Math.max(mBinding.layoutContent.getWidth(), mBinding.layoutContent.getHeight());
+        int endRadius = 0;
+
+        // Initialize animation
+        Animator anim = ViewAnimationUtils.createCircularReveal(mBinding.reveal, x, y, startRadius, endRadius);
+        anim.setDuration(350);
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+            }
+        });
+
+        // Start animation
+        anim.start();
+
+        // Create new fragment
+        fragment = new DefaultFragment();
+        FragmentManager manager = getSupportFragmentManager();
+        final FragmentTransaction transaction = manager.beginTransaction();
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.fragment, fragment);
+        transaction.commit();
+
+        // Delayed setting view invisible
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mBinding.reveal.setVisibility(View.INVISIBLE);
+            }
+        }, 300);
+    }
+
+    /**
+     * Animate floating action button
+     */
     public void animateFab() {
-        if (mIsFabOpen) {
+        if (mIsFabOpen)
             mFab.startAnimation(mRotateBackward);
-            mIsFabOpen = false;
-        }
-        else{
+        else
             mFab.startAnimation(mRotateForward);
-            mIsFabOpen = true;
-        }
+
+        mIsFabOpen = !mIsFabOpen;
     }
 
-    public User getUser(){
+    /**
+     * @return mUser
+     */
+    public User getUser() {
         return mUser;
     }
 
+    /**
+     * Getting data from child activities
+     * @param requestCode what code child activity was started with
+     * @param resultCode what code child activity returned
+     * @param data data from child activity
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == 1101) {
+            // Getting data using bundle
+            Bundle extras = data.getExtras();
+            // Getting new passwords, that was imported through xml file
+            ArrayList<Password> _passwordList = (ArrayList<Password>) extras.getSerializable("imported");
+            mDb = new DBHelper(this);
+            int i = mPasswordList.size();
+
+            // Adding new passwords to database
+            for (; i < _passwordList.size(); i++) {
+                mDb.addPassword(mUser, _passwordList.get(i));
+            }
+        }
+    }
 }

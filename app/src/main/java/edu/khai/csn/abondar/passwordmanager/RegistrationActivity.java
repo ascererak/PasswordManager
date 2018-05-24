@@ -88,7 +88,7 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void onSignupSuccess(){
-        Cryptography crypto = new Cryptography("passwordmanager1", this);
+        Cryptography crypto = new Cryptography("passwordmanager1");
 
         try {
             mPassword = crypto.encrypt(mPassword);

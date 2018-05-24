@@ -3,7 +3,7 @@ package edu.khai.csn.abondar.passwordmanager.Model.Entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User implements Serializable{
+public class User implements Serializable {
     private int userID;
     private String username;
     private String name;
@@ -11,7 +11,8 @@ public class User implements Serializable{
     private String masterPassword;
     private ArrayList<Password> passwords;
 
-    public User(){}
+    public User() {
+    }
 
     public User(int userID, String username, String name, String email, String masterPassword, ArrayList<Password> passwords) {
         this.userID = userID;
@@ -24,6 +25,10 @@ public class User implements Serializable{
 
     public void setPasswords(ArrayList<Password> passwords) {
         this.passwords = passwords;
+    }
+
+    public int getUserId() {
+        return userID;
     }
 
     public void setUserID(int userID) {

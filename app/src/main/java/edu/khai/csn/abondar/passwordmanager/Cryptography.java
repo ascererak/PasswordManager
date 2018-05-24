@@ -16,25 +16,19 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
 
-/**
- * Created by Alexey Bondar on 12-May-18.
- */
 public class Cryptography {
 
     /**
      * Encryption and decryption algorithm
      */
     private static final String ALG = "AES";
-    private static final String CRYPTO = "AES/CBC/PKCS5Padding";
-    private Context context;
     /**
      * Salt for the encryption
      */
     private final String SALT;
 
-    public Cryptography(String key, Context context){
+    public Cryptography(String key){
         SALT = key;
-        this.context = context;
     }
 
     public String encrypt(String data) throws NoSuchAlgorithmException, NoSuchPaddingException,
@@ -62,7 +56,7 @@ public class Cryptography {
         return decryptedValue;
     }
 
-    private SecretKeySpec generateKey() throws NoSuchAlgorithmException,NoSuchPaddingException,
+    public SecretKeySpec generateKey() throws NoSuchAlgorithmException,NoSuchPaddingException,
             InvalidKeyException, IllegalBlockSizeException, BadPaddingException,
             InvalidAlgorithmParameterException, UnsupportedEncodingException {
         final MessageDigest digest = MessageDigest.getInstance("SHA-256");

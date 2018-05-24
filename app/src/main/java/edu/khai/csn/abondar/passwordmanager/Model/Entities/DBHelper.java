@@ -156,7 +156,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public String getUserByEmail(String email){
+    public String getUserByEmail(String email) {
         String password;
         String selectQuery = "select * from " + USER_TABLE + " where " +
                 COLUMN_EMAIL + " = " + "'" + email +"'";
@@ -178,7 +178,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return password;
     }
 
-    public User getUser(String username){
+    public User getUser(String username) {
         SQLiteDatabase db = this.getReadableDatabase();
         User user = new User();
         String selectQuery = "select * from " + USER_TABLE + " where " +
@@ -215,7 +215,7 @@ public class DBHelper extends SQLiteOpenHelper {
 //        ContentValues values = new ContentValues();
 //
 //    }
-    public void addPassword(User user, Password password){
+    public void addPassword(User user, Password password) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -241,7 +241,7 @@ public class DBHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Password inserted" + id);
     }
 
-    public ArrayList<Password> getPassword(String username){
+    public ArrayList<Password> getPassword(String username) {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Password> list = new ArrayList<>();
         String selectQuery = "select * from " + PASSWORD_TABLE + " where "
@@ -270,7 +270,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    public void deletePassword(int id){
+    public void deletePassword(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         //String selectQuery = "select * from " + PASSWORD_TABLE + " where "
         //        + COLUMN_ID + " = " + "'" + id + "'";
@@ -289,6 +289,17 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_SERVICENAME, password.getServiceName());
         values.put(COLUMN_MODIFYNG_DATE, password.getModifyingDate().toString());
         db.update(PASSWORD_TABLE, values, "ID = ?", new String[]{Integer.toString(password.getId())});
+        db.close();
+    }
+
+    public void updateMaster(User user, String password){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        //values.put(COLUMN_ID, password.getId());
+        values.put(COLUMN_PASS, password);
+
+        db.update(USER_TABLE, values, "ID = ?", new String[]{Integer.toString(user.getUserId())});
         db.close();
     }
 }

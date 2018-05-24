@@ -46,15 +46,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         imageMap.put("instagram", R.drawable.ic_icon_instagram);
         imageMap.put("twitter", R.drawable.ic_icon_twitter);
         imageMap.put("google", R.drawable.ic_icon_google);
-        ///imageMap.put("vk", 3);
-        ///imageMap.put("steam", 4);
-        //imageMap.put("twitch", R.drawable.ic_icon_twitch);
+        imageMap.put("vk", R.drawable.ic_icon_vk);
+        imageMap.put("steam", R.drawable.ic_icon_steam);
+        imageMap.put("twitch", R.drawable.ic_icon_twitch);
         imageMap.put("github", R.drawable.ic_icon_github);
-        //imageMap.put("elearn", R.drawable.ic_icon_elearn);
-        ///imageMap.put("dropbox", 8);
-        //imageMap.put("appleid", R.drawable.ic_icon_appleid);
-        //imageMap.put("facebook", R.drawable.ic_icon_facebook);
-        ///imageMap.put("linkedin", 11);
+        imageMap.put("elearn", R.drawable.ic_icon_elearn);
+        imageMap.put("dropbox", R.drawable.ic_icon_dropbox);
+        //imageMap.put("apple", R.drawable.ic_icon_apple);
+        imageMap.put("facebook", R.drawable.ic_icon_facebook);
+        imageMap.put("linkedin", R.drawable.ic_icon_linkedin);
         imageMap.put("evernote", R.drawable.ic_icon_evernote);
     }
 
@@ -103,7 +103,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             loginName = itemView.findViewById(R.id.login);
             clipboard = itemView.findViewById(R.id.copyToClipboard);
             clipboardManager=(ClipboardManager)context.getSystemService(CLIPBOARD_SERVICE);
-            crypto = new Cryptography("passwordmanager1", context);
+            crypto = new Cryptography("passwordmanager1");
 
             mArrayList = arrayList;
             this.context = context;

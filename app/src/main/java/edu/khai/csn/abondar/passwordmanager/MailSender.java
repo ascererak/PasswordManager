@@ -3,9 +3,6 @@ package edu.khai.csn.abondar.passwordmanager;
 import java.security.Security;
 import java.util.Properties;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.Multipart;
@@ -24,7 +21,7 @@ import android.util.Log;
  * Created by Alexey Bondar on 15-May-18.
  */
 
-public class MailSender extends javax.mail.Authenticator{
+public class MailSender extends javax.mail.Authenticator {
 
     private String mLogin;
     private String mPassword;
@@ -36,9 +33,7 @@ public class MailSender extends javax.mail.Authenticator{
         Security.addProvider(new JSSEProvider());
     }
 
-
-
-    public MailSender(String login, String password){
+    public MailSender(String login, String password) {
         mLogin = login;
         mPassword = password;
 
@@ -55,22 +50,18 @@ public class MailSender extends javax.mail.Authenticator{
         props.setProperty("mail.smtp.quitwait", "false");
 
         session = Session.getDefaultInstance(props, this);
-
     }
 
-    protected PasswordAuthentication getPasswordAuthentication(){
+    protected PasswordAuthentication getPasswordAuthentication() {
         return new PasswordAuthentication(mLogin, mPassword);
     }
 
-    public synchronized void sendMail(String subject, String body, String sender, String recipients, String filename) {
+    public synchronized void sendMail(String subject, String body, String sender, String recipients) {
         try {
             MimeMessage message = new MimeMessage(session);
 
-            // Кто
             message.setSender(new InternetAddress(sender));
-            // О чем
             message.setSubject(subject);
-            // Кому
             if (recipients.indexOf(',') > 0)
                 message.setRecipients(Message.RecipientType.TO,
                         InternetAddress.parse(recipients));
@@ -78,26 +69,15 @@ public class MailSender extends javax.mail.Authenticator{
                 message.setRecipient(Message.RecipientType.TO,
                         new InternetAddress(recipients));
 
-            // Хочет сказать
             BodyPart messageBodyPart = new MimeBodyPart();
             messageBodyPart.setText(body);
             _multipart.addBodyPart(messageBodyPart);
-
-            // И что показать
-            if (!filename.equalsIgnoreCase("")) {
-                BodyPart attachBodyPart = new MimeBodyPart();
-                DataSource source = new FileDataSource(filename);
-                attachBodyPart.setDataHandler(new DataHandler(source));
-                attachBodyPart.setFileName(filename);
-
-                _multipart.addBodyPart(attachBodyPart);
-            }
 
             message.setContent(_multipart);
 
             Transport.send(message);
         } catch (Exception e) {
-            Log.e("sendMail","Ошибка отправки функцией sendMail! ");
+            Log.e("sendMail", "Error sending email! ");
         }
     }
 }

@@ -6,7 +6,6 @@ import java.util.Date;
 /**
  * Created by Alexey Bondar on 16-Apr-18.
  */
-
 public class Password implements Serializable{
     private String password;
     private String serviceName;
@@ -33,6 +32,26 @@ public class Password implements Serializable{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setAdditionalInformation(String additionalInformation) {
+        this.additionalInformation = additionalInformation;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setModifyingDate(Date modifyingDate) {
+        this.modifyingDate = modifyingDate;
     }
 
     public String getServiceName() {
