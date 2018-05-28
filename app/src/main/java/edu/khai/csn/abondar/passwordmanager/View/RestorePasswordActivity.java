@@ -16,9 +16,10 @@ import android.widget.Toast;
 import edu.khai.csn.abondar.passwordmanager.Model.Cryptography;
 import edu.khai.csn.abondar.passwordmanager.Model.DBHelper;
 import edu.khai.csn.abondar.passwordmanager.Model.MailSender;
+import edu.khai.csn.abondar.passwordmanager.Presenter.CryptoPresenter;
 import edu.khai.csn.abondar.passwordmanager.R;
 
-public class RestorePasswordActivity extends AppCompatActivity {
+public class RestorePasswordActivity extends AppCompatActivity implements TransmitDataView{
 
     private EditText mEtEmail;
     private String mEmail;
@@ -31,7 +32,8 @@ public class RestorePasswordActivity extends AppCompatActivity {
             "If you are having any troubles using our service, please give us a feedback in reply to this letter.";
     private DBHelper db;
     private Context context;
-    private Cryptography crypto;
+    private String password;
+    private CryptoPresenter mCryptoPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +45,7 @@ public class RestorePasswordActivity extends AppCompatActivity {
         mBtnRestorePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String password = "";
+                password = "";
                 mEmail = mEtEmail.getText().toString();
 
                 if (mEmail.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(mEmail).matches()) {
@@ -53,7 +55,7 @@ public class RestorePasswordActivity extends AppCompatActivity {
                         Toast.makeText(context, "User with such email doesn't exist", Toast.LENGTH_SHORT).show();
                     } else {
                         try {
-                            password = crypto.decrypt(password);
+                            mCryptoPresenter.decrypt();
                         } catch (Exception e) {
                             Log.e("Exception", "Error while decrypting password");
                         }
@@ -94,17 +96,11 @@ public class RestorePasswordActivity extends AppCompatActivity {
     }
 
     private void initialize(){
-       //Toolbar mToolBar = findViewById(R.id.navAction);
-       //setSupportActionBar(mToolBar);
-       //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-       //getSupportActionBar().setDisplayShowHomeEnabled(true);
-       //getSupportActionBar().setSubtitle("Forgot your password?");
-
         mEtEmail = findViewById(R.id.email_restpass);
         mBtnRestorePassword = findViewById(R.id.btnRestPass);
         db = new DBHelper(this);
         context = this;
-        crypto = new Cryptography("passwordmanager1");
+        mCryptoPresenter = new CryptoPresenter(this);
     }
 
     @Override
@@ -113,6 +109,16 @@ public class RestorePasswordActivity extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
     }
 }
 

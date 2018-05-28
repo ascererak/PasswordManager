@@ -32,7 +32,6 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_EMAIL = "email";
     private static final String COLUMN_PASS = "masterPassword";
-    //public static final String COLUMN_PASSWORDS = "passwords";
 
     private static final String PASSWORD_TABLE = "passwords";
     private static final String COLUMN_PASSWORD = "password";
@@ -53,14 +52,14 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_USERS = "CREATE TABLE " + USER_TABLE + "("
             + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + COLUMN_NAME + " TEXT,"
-            + COLUMN_USERNAME  + " TEXT,"
+            + COLUMN_USERNAME + " TEXT,"
             + COLUMN_EMAIL + " TEXT,"
             + COLUMN_PASS + " TEXT);";
 
     private static final String CREATE_TABLE_PASSWORDS = "CREATE TABLE " + PASSWORD_TABLE + "("
             + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + COLUMN_PASSWORD + " TEXT,"
-            + COLUMN_USERNAME  + " TEXT,"
+            + COLUMN_USERNAME + " TEXT,"
             + COLUMN_SERVICENAME + " TEXT,"
             + COLUMN_ADDINFO + " TEXT,"
             + COLUMN_CREATION_DATE + " TEXT,"
@@ -79,12 +78,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " +  USER_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + PASSWORD_TABLE);
         onCreate(db);
     }
 
-    public void addUser(User user, Password password){
+    public void addUser(User user, Password password) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -120,17 +119,17 @@ public class DBHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Password inserted" + id2);
     }//end addUser
 
-    public boolean getUser(String username, String password){
+    public boolean getUser(String username, String password) {
 
         String selectQuery = "select * from " + USER_TABLE + " where " +
                 COLUMN_USERNAME + " = " + "'" + username + "'" + " and " + COLUMN_PASS
-                + " = " + "'" + password +"'";
+                + " = " + "'" + password + "'";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         //Move to first row
         cursor.moveToFirst();
-        if(cursor.getCount() > 0) {
+        if (cursor.getCount() > 0) {
             return true;
         }
 
@@ -140,16 +139,16 @@ public class DBHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public boolean getUser(String username, String email, int mode){
+    public boolean getUser(String username, String email, int mode) {
         String selectQuery = "select * from " + USER_TABLE + " where " +
                 COLUMN_USERNAME + " = " + "'" + username + "'" + " or " + COLUMN_EMAIL
-                + " = " + "'" + email +"'";
+                + " = " + "'" + email + "'";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         //Move to first row
         cursor.moveToFirst();
-        if(cursor.getCount() > 0) {
+        if (cursor.getCount() > 0) {
             return true;
         }
 
@@ -162,16 +161,15 @@ public class DBHelper extends SQLiteOpenHelper {
     public String getUserByEmail(String email) {
         String password;
         String selectQuery = "select * from " + USER_TABLE + " where " +
-                COLUMN_EMAIL + " = " + "'" + email +"'";
+                COLUMN_EMAIL + " = " + "'" + email + "'";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         cursor.moveToFirst();
-        if(cursor.getCount() <= 0) {
-            password =  null;
-        }
-        else{
+        if (cursor.getCount() <= 0) {
+            password = null;
+        } else {
             password = cursor.getString(4);
         }
 
@@ -189,23 +187,15 @@ public class DBHelper extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         cursor.moveToFirst();
-       // for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-       //     if(cursor.getString(2) == username) {
-                user.setUserID(cursor.getInt(0));
-                user.setName(cursor.getString(1));
-                user.setUsername(cursor.getString(2));
-                user.setEmail(cursor.getString(3));
-                user.setMasterPassword(cursor.getString(4));
-                Bundle extras = cursor.getExtras();
-                user.setPasswords((ArrayList<Password>) extras.getSerializable("Passwords"));
-       //     }
-       // }
 
+        user.setUserID(cursor.getInt(0));
+        user.setName(cursor.getString(1));
+        user.setUsername(cursor.getString(2));
+        user.setEmail(cursor.getString(3));
+        user.setMasterPassword(cursor.getString(4));
+        Bundle extras = cursor.getExtras();
+        user.setPasswords((ArrayList<Password>) extras.getSerializable("Passwords"));
 
-        //    if (cursor.getCount() > 0) {
-        //        return true;
-        //    }
-//
         cursor.close();
         db.close();
 
@@ -213,11 +203,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return user;
     }
 
-//    public boolean updateUser(User user) {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        ContentValues values = new ContentValues();
-//
-//    }
     public void addPassword(User user, Password password) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -253,7 +238,6 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         SimpleDateFormat format = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
-        Date date = new Date();
 
         try {
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
@@ -261,8 +245,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         cursor.getString(2), cursor.getString(4), Integer.parseInt(cursor.getString(0)),
                         format.parse(cursor.getString(5)), format.parse(cursor.getString(6))));
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Log.e("Exeption", "Something went wrong while getting passwords");
         }
 
@@ -275,18 +258,15 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void deletePassword(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        //String selectQuery = "select * from " + PASSWORD_TABLE + " where "
-        //        + COLUMN_ID + " = " + "'" + id + "'";
         db.delete(PASSWORD_TABLE, "ID = ?", new String[]{Integer.toString(id)});
         db.close();
     }
 
-    public void updatePassword(Password password){
+    public void updatePassword(Password password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        //values.put(COLUMN_ID, password.getId());
-        values.put(COLUMN_PASSWORD , password.getPassword());
+        values.put(COLUMN_PASSWORD, password.getPassword());
         values.put(COLUMN_USERNAME, password.getUserName());
         values.put(COLUMN_ADDINFO, password.getAdditionalInformation());
         values.put(COLUMN_SERVICENAME, password.getServiceName());
@@ -295,11 +275,10 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void updateMaster(User user, String password){
+    public void updateMaster(User user, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        //values.put(COLUMN_ID, password.getId());
         values.put(COLUMN_PASS, password);
 
         db.update(USER_TABLE, values, "ID = ?", new String[]{Integer.toString(user.getUserId())});

@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import edu.khai.csn.abondar.passwordmanager.Model.Cryptography;
-import edu.khai.csn.abondar.passwordmanager.View.LoginActView;
+import edu.khai.csn.abondar.passwordmanager.View.TransmitDataView;
 
 /**
  * Created by Alexey Bondar on 14-May-18.
@@ -13,9 +13,9 @@ import edu.khai.csn.abondar.passwordmanager.View.LoginActView;
 public class CryptoPresenter {
 
     private Cryptography crypto = new Cryptography("passwordmanager1");
-    private LoginActView view;
+    private TransmitDataView view;
 
-    public CryptoPresenter(@NonNull LoginActView view) {
+    public CryptoPresenter(@NonNull TransmitDataView view) {
         this.view = view;
     }
 

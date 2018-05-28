@@ -28,7 +28,7 @@ import edu.khai.csn.abondar.passwordmanager.Presenter.CryptoPresenter;
 import edu.khai.csn.abondar.passwordmanager.R;
 import edu.khai.csn.abondar.passwordmanager.databinding.ActivityLoginBinding;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, LoginActView {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, TransmitDataView {
 
     protected FrameLayout btnLogin;
     protected EditText username;
@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String _username = username.getText().toString();
         mPassword = password.getText().toString();
 
-        encrypt();
+        mPresenter.encrypt();
 
         if (db.getUser(_username, mPassword)) {
             prepareToLaunchActivity(_username);
@@ -89,10 +89,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         load();
     }
 
-    @Override
-    public void encrypt(){
-        mPresenter.encrypt();
-    }
+    //@Override
+    //public void encrypt(){
+     //   mPresenter.encrypt();
+    //}
 
     @Override
     public void setPassword(String password) {

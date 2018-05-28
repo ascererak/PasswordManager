@@ -16,13 +16,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import edu.khai.csn.abondar.passwordmanager.Model.Cryptography;
 import edu.khai.csn.abondar.passwordmanager.Model.DBHelper;
 import edu.khai.csn.abondar.passwordmanager.Model.GeneratePassword;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.Password;
+import edu.khai.csn.abondar.passwordmanager.Presenter.CryptoPresenter;
 import edu.khai.csn.abondar.passwordmanager.R;
 
-public class PasswordDetailsActivity extends AppCompatActivity {
+public class PasswordDetailsActivity extends AppCompatActivity implements TransmitDataView {
 
     private EditText mEtService;
     private EditText mEtUsername;
@@ -37,11 +37,11 @@ public class PasswordDetailsActivity extends AppCompatActivity {
     private DBHelper mDb;
     private int mGeneratedPasswordLength;
     private boolean mIsEditingAllowed;
-    private Cryptography mCrypto;
+    private CryptoPresenter mCryptoPresenter;
     private FrameLayout mBtnSaveChanges;
-    TextView mTvCreationDate;
-    TextView mTvModifingDate;
-    Toolbar mToolBar;
+    private TextView mTvCreationDate;
+    private TextView mTvModifyingDate;
+    private Toolbar mToolBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,12 +98,13 @@ public class PasswordDetailsActivity extends AppCompatActivity {
         mBtnSaveChanges = findViewById(R.id.btnSaveChanges);
         mTvCreationDate = findViewById(R.id.tvCreationDate);
         mEtAddInfo = findViewById(R.id.AddInfoShow);
-        mTvModifingDate = findViewById(R.id.tvModifingDate);
+        mTvModifyingDate = findViewById(R.id.tvModifingDate);
         mToolBar = findViewById(R.id.navAction);
         mSeekBarShower = findViewById(R.id.seekBarShowerWD);
         mSeekBar = findViewById(R.id.seekBarWD);
         mSeekBar.setProgress(8);
-        mCrypto = new Cryptography("passwordmanager1");
+        mCryptoPresenter = new CryptoPresenter(this);
+        //mCrypto = new Cryptography("passwordmanager1");
         mDb = new DBHelper(this);
 
         setSupportActionBar(mToolBar);
@@ -112,30 +113,31 @@ public class PasswordDetailsActivity extends AppCompatActivity {
     }
 
     private void setEditTexts(Password password) {
+        mPassword = password.getPassword();
         mEtService.setText(password.getServiceName());
         mEtUsername.setText(password.getUserName());
         mEtAddInfo.setText(password.getAdditionalInformation());
         String date = convertDate(password.getCreationDate().toString());
         mTvCreationDate.setText(date);
         date = convertDate(password.getModifyingDate().toString());
-        mTvModifingDate.setText(date);
+        mTvModifyingDate.setText(date);
 
-        String decrPassword = "";
+        //String decrPassword = "";
         try {
-            decrPassword = mCrypto.decrypt(password.getPassword());
+            mCryptoPresenter.decrypt();
         } catch (Exception e) {
-            Log.e("Decryption exeption", "PasswordDetailsActivity");
+            Log.e("Decryption exception", "PasswordDetailsActivity");
         }
-        mEtPassword.setText(decrPassword);
+        mEtPassword.setText(mPassword);
     }
 
     public void editTextToString() {
         mService = mEtService.getText().toString().trim();
         mPassword = mEtPassword.getText().toString().trim();
         try {
-            mPassword = mCrypto.encrypt(mPassword);
+            mCryptoPresenter.encrypt();
         } catch (Exception e) {
-            Log.e("Exeption", "Error while encryption");
+            Log.e("Exception", "Error while encryption");
         }
         mUsername = mEtUsername.getText().toString().trim();
         mAddInfo = mEtAddInfo.getText().toString().trim();
@@ -206,5 +208,15 @@ public class PasswordDetailsActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e("Exception", "Exception while generating password");
         }
+    }
+
+    @Override
+    public void setPassword(String password) {
+        mPassword = password;
+    }
+
+    @Override
+    public String getPassword() {
+        return mPassword;
     }
 }

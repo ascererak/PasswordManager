@@ -1,7 +1,5 @@
 package edu.khai.csn.abondar.passwordmanager;
 
-import android.app.Activity;
-import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -10,22 +8,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 import edu.khai.csn.abondar.passwordmanager.Model.Cryptography;
 import edu.khai.csn.abondar.passwordmanager.Model.DBHelper;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.Password;
 import edu.khai.csn.abondar.passwordmanager.Model.Entities.User;
 import edu.khai.csn.abondar.passwordmanager.Presenter.RecyclerAdapter;
-import edu.khai.csn.abondar.passwordmanager.View.HomeActivity;
 
 import static org.junit.Assert.*;
 
